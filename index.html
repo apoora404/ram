@@ -84,6 +84,10 @@
     font-weight: bold;
     color: #4e8ef7;
   }
+  .warning {
+    color: #ff4d4d;
+    font-weight: bold;
+  }
   /* ✅ 프로모션 UI */
   .promo-group {
     display: flex;
@@ -190,6 +194,13 @@ function calc() {
 
     // 총합
     let total_all = total_main + total_bonus;
+    let daily_total = dailyInterest_main + dailyInterest_bonus;
+
+    // 경고 메시지
+    let warningMsg = "";
+    if (recoveryDays > days) {
+        warningMsg = "<div class='warning'>⚠️ 원금 회수 예상 기간(" + Math.ceil(recoveryDays) + "일)이 할당 기간(" + days + "일)을 초과합니다.</div>";
+    }
 
     document.getElementById("result").innerHTML =
       "<div class='result-section'><div class='result-title'>✅ [예치 RAM]</div>" +
@@ -203,7 +214,11 @@ function calc() {
       "<div class='result-item'>총 이자(2400일): <span class='highlight'>" + total_bonus.toFixed(2) + "</span> USDT</div></div>" +
 
       "<div class='result-section'><div class='result-title'>✅ [총 합계]</div>" +
-      "<div class='result-item'>예치 + 보너스 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div></div>";
+      "<div class='result-item'>예치 + 보너스 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total*7).toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total*30).toFixed(2) + "</span> USDT</div></div>" +
+      warningMsg;
 }
 </script>
 </head>
