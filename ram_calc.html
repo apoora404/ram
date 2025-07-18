@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>RAM 이율 계산기</title>
+<style>
+  body {font-family: Arial, sans-serif; max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;}
+  h2 {text-align: center; color: #333;}
+  label {display: block; margin-top: 10px;}
+  input, select {width: 100%; padding: 8px; margin-top: 5px;}
+  button {margin-top: 15px; width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;}
+  button:hover {background: #0056b3;}
+  #result {margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;}
+</style>
+<script>
+const dayBonusTable = [
+  {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
+  {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
+  {day:561, bonus:1.06}, {day:641, bonus:1.07}, {day:720, bonus:1.08},
+  {day:801, bonus:1.09}, {day:881, bonus:1.10}, {day:960, bonus:1.11},
+  {day:1041, bonus:1.12}, {day:1121, bonus:1.13}, {day:1200, bonus:1.14},
+  {day:1281, bonus:1.15}, {day:1361, bonus:1.16}, {day:1440, bonus:1.17},
+  {day:1521, bonus:1.18}, {day:1601, bonus:1.19}, {day:1680, bonus:1.20},
+  {day:1761, bonus:1.21}, {day:1841, bonus:1.22}, {day:1920, bonus:1.23},
+  {day:2001, bonus:1.24}, {day:2081, bonus:1.25}, {day:2160, bonus:1.26},
+  {day:2241, bonus:1.27}, {day:2320, bonus:1.28}, {day:2399, bonus:1.29},
+  {day:2400, bonus:1.30}
+];
+
+function getDayBonus(days) {
+  let bonus = 1;
+  for (let i = 0; i < dayBonusTable.length; i++) {
+    if (days < dayBonusTable[i].day) break;
+    bonus = dayBonusTable[i].bonus;
+  }
+  return bonus;
+}
+
+function getBaseRate(invest, promo) {
+  if (promo === "promo") {
+    if (invest <= 1000) return 0.005;
+    if (invest <= 5000) return 0.0053;
+    if (invest <= 9999) return 0.0058;
+    return 0.0069;
+  } else {
+    if (invest <= 1000) return 0.005;
+    if (invest <= 5000) return 0.0053;
+    if (invest <= 9999) return 0.0055;
+    return 0.0063;
+  }
+}
+
+function calc() {
+    let invest = parseFloat(document.getElementById("invest").value);
+    let days = parseInt(document.getElementById("days").value);
+    let hashBonus = parseFloat(document.getElementById("hash").value);
+    let promo = document.querySelector('input[name="promo"]:checked').value;
+
+    if (isNaN(invest) || isNaN(days)) {
+        document.getElementById("result").innerHTML = "모든 값을 입력하세요!";
+        return;
+    }
+
+    let baseRate = getBaseRate(invest, promo);
+    let dayBonus = getDayBonus(days);
+
+    let dailyInterest = invest * baseRate * hashBonus * dayBonus;
+    let recoveryDays = invest / dailyInterest;
+
+    document.getElementById("result").innerHTML =
+      "<b>일일 RAM 이자:</b> " + dailyInterest.toFixed(2) + " USDT<br>" +
+      "<b>원금 회수 예상:</b> 약 " + Math.ceil(recoveryDays) + " 일";
+}
+</script>
+</head>
+<body>
+<h2>RAM 이율 계산기</h2>
+<label>투자금(USDT):</label>
+<input type="number" id="invest" placeholder="예: 2500">
+
+<label>예치기간(일):</label>
+<input type="number" id="days" placeholder="예: 100">
+
+<label>해시레이트 구간:</label>
+<select id="hash">
+  <option value="1">1M ~ 5M</option>
+  <option value="1.05">5M ~ 8M</option>
+  <option value="1.1025">8M ~ 16M</option>
+  <option value="1.157625">16M ~ 25M</option>
+  <option value="1.21550625">25M ~ 50M</option>
+  <option value="1.27628157">50M+</option>
+</select>
+
+<label>프로모션 여부:</label>
+<input type="radio" name="promo" value="basic" checked> 기본
+<input type="radio" name="promo" value="promo"> 프로모션
+
+<button onclick="calc()">계산하기</button>
+<div id="result"></div>
+</body>
+</html>
