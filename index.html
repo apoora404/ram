@@ -4,16 +4,86 @@
 <meta charset="UTF-8">
 <title>RAM 이율 계산기</title>
 <style>
-  body {font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 20px; background: #f7f8fa;}
-  h2 {text-align: center; color: #2c3e50;}
-  .card {background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
-  label {display: block; margin-top: 10px; font-weight: bold; color: #34495e;}
-  input, select {width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;}
-  button {margin-top: 15px; width: 100%; padding: 12px; background: #007bff; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;}
-  button:hover {background: #0056b3;}
-  #result {margin-top: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px; border: 1px solid #bdc3c7;}
-  .result-item {margin: 5px 0;}
-  .highlight {font-weight: bold; color: #2c3e50;}
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 550px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #0f111a;
+    color: #ecf0f1;
+  }
+  h2 {
+    text-align: center;
+    color: #6c63ff;
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: #1a1a2e;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 1px solid #6c63ff33;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #cfd3e0;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #6c63ff55;
+    border-radius: 8px;
+    background: #12141f;
+    color: #fff;
+  }
+  input::placeholder {
+    color: #888;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, #6c63ff, #4e8ef7);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+  #result {
+    margin-top: 25px;
+    padding: 15px;
+    background: #12141f;
+    border-radius: 8px;
+    border: 1px solid #6c63ff33;
+  }
+  .result-section {
+    margin-bottom: 18px;
+    border-top: 1px solid #6c63ff33;
+    padding-top: 10px;
+  }
+  .result-title {
+    font-weight: bold;
+    color: #6c63ff;
+    margin-bottom: 5px;
+  }
+  .result-item {
+    margin: 4px 0;
+    color: #ecf0f1;
+  }
+  .highlight {
+    font-weight: bold;
+    color: #4e8ef7;
+  }
 </style>
 <script>
 const dayBonusTable = [
@@ -54,7 +124,7 @@ function getBaseRate(invest, promo) {
 }
 
 function getBonusRAM(invest, days) {
-  if (days < 120) return 0;  // ✅ 120일 미만 보너스 없음
+  if (days < 120) return 0;
   if (invest <= 1000) return 0;
   if (invest <= 5000) return invest * 0.10;
   if (invest <= 10000) return invest * 0.15;
@@ -80,23 +150,35 @@ function calc() {
         return;
     }
 
+    // 예치 RAM
     let baseRate = getBaseRate(invest, promo);
-    let bonusRAM = getBonusRAM(invest, days); // ✅ 120일 조건 반영
-    let bonusRate = getBonusRate(bonusRAM);
     let dayBonus = getDayBonus(days);
+    let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
+    let total_main = dailyInterest_main * days;
+    let recoveryDays = invest / dailyInterest_main;
 
-    let dailyInterest = (invest * baseRate + bonusRAM * bonusRate) * hashBonus * dayBonus;
-    let recoveryDays = invest / dailyInterest;
-    let totalInterest = dailyInterest * days;
+    // 보너스 RAM (2400일 고정)
+    let bonusRAM = getBonusRAM(invest, days);
+    let bonusRate = getBonusRate(bonusRAM);
+    let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3;
+    let total_bonus = dailyInterest_bonus * 2400;
+
+    // 총합
+    let total_all = total_main + total_bonus;
 
     document.getElementById("result").innerHTML =
-      "<div class='result-item'><span class='highlight'>일일 RAM 이자:</span> " + dailyInterest.toFixed(2) + " USDT</div>" +
-      "<div class='result-item'><span class='highlight'>보너스 RAM:</span> " + bonusRAM.toFixed(2) + " USDT</div>" +
-      "<div class='result-item'><span class='highlight'>예상 원금 회수 기간:</span> 약 " + Math.ceil(recoveryDays) + " 일</div>" +
-      "<div class='result-item'><span class='highlight'>원금 회수까지 남은 기간:</span> " + Math.max(days - Math.ceil(recoveryDays),0) + " 일</div>" +
-      "<div class='result-item'><span class='highlight'>만기일까지 총 이자:</span> " + totalInterest.toFixed(2) + " USDT</div>" +
-      "<div class='result-item'><span class='highlight'>만기일까지 1주 이자:</span> " + (dailyInterest*7).toFixed(2) + " USDT</div>" +
-      "<div class='result-item'><span class='highlight'>만기일까지 1달 이자:</span> " + (dailyInterest*30).toFixed(2) + " USDT</div>";
+      "<div class='result-section'><div class='result-title'>✅ [예치 RAM]</div>" +
+      "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_main.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>총 이자(" + days + "일): <span class='highlight'>" + total_main.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>원금 회수 예상: <span class='highlight'>약 " + Math.ceil(recoveryDays) + " 일</span></div></div>" +
+
+      "<div class='result-section'><div class='result-title'>✅ [보너스 RAM (2400일)]</div>" +
+      "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>총 이자(2400일): <span class='highlight'>" + total_bonus.toFixed(2) + "</span> USDT</div></div>" +
+
+      "<div class='result-section'><div class='result-title'>✅ [총 합계]</div>" +
+      "<div class='result-item'>예치 + 보너스 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div></div>";
 }
 </script>
 </head>
@@ -120,8 +202,10 @@ function calc() {
 </select>
 
 <label>프로모션 여부:</label>
-<input type="radio" name="promo" value="basic" checked> 기본
-<input type="radio" name="promo" value="promo"> 프로모션
+<div style="display:flex;justify-content:space-between;margin-top:5px;">
+  <label><input type="radio" name="promo" value="basic" checked> 기본</label>
+  <label><input type="radio" name="promo" value="promo"> 프로모션</label>
+</div>
 
 <button onclick="calc()">계산하기</button>
 <div id="result"></div>
