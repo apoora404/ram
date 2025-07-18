@@ -1,17 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>RAM 이율 계산기</title>
 <style>
-  body {font-family: Arial, sans-serif; max-width: 400px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;}
-  h2 {text-align: center; color: #333;}
-  label {display: block; margin-top: 10px;}
-  input, select {width: 100%; padding: 8px; margin-top: 5px;}
-  button {margin-top: 15px; width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;}
+  body {font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 20px; background: #f7f8fa;}
+  h2 {text-align: center; color: #2c3e50;}
+  .card {background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+  label {display: block; margin-top: 10px; font-weight: bold; color: #34495e;}
+  input, select {width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;}
+  button {margin-top: 15px; width: 100%; padding: 12px; background: #007bff; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;}
   button:hover {background: #0056b3;}
-  #result {margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;}
+  #result {margin-top: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px; border: 1px solid #bdc3c7;}
+  .result-item {margin: 5px 0;}
+  .highlight {font-weight: bold; color: #2c3e50;}
 </style>
 <script>
 const dayBonusTable = [
@@ -39,16 +41,31 @@ function getDayBonus(days) {
 
 function getBaseRate(invest, promo) {
   if (promo === "promo") {
-    if (invest <= 1000) return 0.005;
+    if (invest <= 1000) return 0.0050;
     if (invest <= 5000) return 0.0053;
-    if (invest <= 9999) return 0.0058;
-    return 0.0069;
+    if (invest <= 10000) return 0.00578;
+    return 0.00693;
   } else {
-    if (invest <= 1000) return 0.005;
+    if (invest <= 1000) return 0.0050;
     if (invest <= 5000) return 0.0053;
-    if (invest <= 9999) return 0.0055;
+    if (invest <= 10000) return 0.0055;
     return 0.0063;
   }
+}
+
+function getBonusRAM(invest) {
+  if (invest <= 1000) return 0;
+  if (invest <= 5000) return invest * 0.10;
+  if (invest <= 10000) return invest * 0.15;
+  return invest * 0.20;
+}
+
+function getBonusRate(bonusRAM) {
+  if (bonusRAM === 0) return 0;
+  if (bonusRAM <= 1000) return 0.0050;
+  if (bonusRAM <= 5000) return 0.0053;
+  if (bonusRAM <= 10000) return 0.0055;
+  return 0.0063;
 }
 
 function calc() {
@@ -63,24 +80,33 @@ function calc() {
     }
 
     let baseRate = getBaseRate(invest, promo);
+    let bonusRAM = getBonusRAM(invest);
+    let bonusRate = getBonusRate(bonusRAM);
     let dayBonus = getDayBonus(days);
 
-    let dailyInterest = invest * baseRate * hashBonus * dayBonus;
+    let dailyInterest = (invest * baseRate + bonusRAM * bonusRate) * hashBonus * dayBonus;
     let recoveryDays = invest / dailyInterest;
+    let totalInterest = dailyInterest * days;
 
     document.getElementById("result").innerHTML =
-      "<b>일일 RAM 이자:</b> " + dailyInterest.toFixed(2) + " USDT<br>" +
-      "<b>원금 회수 예상:</b> 약 " + Math.ceil(recoveryDays) + " 일";
+      "<div class='result-item'><span class='highlight'>일일 RAM 이자:</span> " + dailyInterest.toFixed(2) + " USDT</div>" +
+      "<div class='result-item'><span class='highlight'>보너스 RAM:</span> " + bonusRAM.toFixed(2) + " USDT</div>" +
+      "<div class='result-item'><span class='highlight'>예상 원금 회수 기간:</span> 약 " + Math.ceil(recoveryDays) + " 일</div>" +
+      "<div class='result-item'><span class='highlight'>원금 회수까지 남은 기간:</span> " + Math.max(days - Math.ceil(recoveryDays),0) + " 일</div>" +
+      "<div class='result-item'><span class='highlight'>만기일까지 총 이자:</span> " + totalInterest.toFixed(2) + " USDT</div>" +
+      "<div class='result-item'><span class='highlight'>만기일까지 1주 이자:</span> " + (dailyInterest*7).toFixed(2) + " USDT</div>" +
+      "<div class='result-item'><span class='highlight'>만기일까지 1달 이자:</span> " + (dailyInterest*30).toFixed(2) + " USDT</div>";
 }
 </script>
 </head>
 <body>
+<div class="card">
 <h2>RAM 이율 계산기</h2>
 <label>투자금(USDT):</label>
-<input type="number" id="invest" placeholder="예: 2500">
+<input type="number" id="invest" placeholder="예: 5000">
 
 <label>예치기간(일):</label>
-<input type="number" id="days" placeholder="예: 100">
+<input type="number" id="days" placeholder="예: 120">
 
 <label>해시레이트 구간:</label>
 <select id="hash">
@@ -98,5 +124,6 @@ function calc() {
 
 <button onclick="calc()">계산하기</button>
 <div id="result"></div>
+</div>
 </body>
 </html>
