@@ -53,7 +53,8 @@ function getBaseRate(invest, promo) {
   }
 }
 
-function getBonusRAM(invest) {
+function getBonusRAM(invest, days) {
+  if (days < 120) return 0;  // ✅ 120일 미만 보너스 없음
   if (invest <= 1000) return 0;
   if (invest <= 5000) return invest * 0.10;
   if (invest <= 10000) return invest * 0.15;
@@ -80,7 +81,7 @@ function calc() {
     }
 
     let baseRate = getBaseRate(invest, promo);
-    let bonusRAM = getBonusRAM(invest);
+    let bonusRAM = getBonusRAM(invest, days); // ✅ 120일 조건 반영
     let bonusRate = getBonusRate(bonusRAM);
     let dayBonus = getDayBonus(days);
 
