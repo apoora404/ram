@@ -8,21 +8,22 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
+    max-width: 950px; /* ✅ 전체 너비 확장 */
     margin: 30px auto;
-    padding: 0 20px; /* 좌우 패딩만 유지 */
+    padding: 0 20px;
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
-    display: flex; /* body에 flex 적용 */
-    justify-content: center; /* 중앙 정렬 */
+    display: flex;
+    justify-content: center;
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
     display: flex;
     gap: 25px; /* 계산기와 사이드바 간격 */
     flex-wrap: wrap; /* 반응형 시 줄바꿈 */
-    max-width: 900px; /* 전체 최대 너비 */
-    width: 100%; /* 너비 100% (max-width까지) */
+    max-width: 950px; /* ✅ 전체 최대 너비 */
+    width: 100%;
   }
   h2 {
     text-align: center;
@@ -32,8 +33,8 @@
     text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
   .card {
-    flex: 1; /* 계산기 카드가 남은 공간을 채우도록 */
-    min-width: 380px; /* 계산기 카드의 최소 너비 */
+    flex: 1;
+    min-width: 380px;
     background: #1e1430; /* 카드 배경색 */
     padding: 25px;
     border-radius: 18px;
@@ -49,8 +50,8 @@
     font-size: 15px;
   }
   input {
-    max-width: 200px; /* 너비 제한 */
-    width: 100%; /* 반응형을 위해 기본 100% 설정 후 max-width 적용 */
+    max-width: 200px;
+    width: 100%;
     padding: 12px 15px;
     margin-top: 5px;
     border: 1px solid #8c7eff55;
@@ -67,8 +68,8 @@
     color: #8a96a8;
   }
   select:not(#hash) { /* RAM 해시레이트 선택 박스 제외 */
-    max-width: 200px; /* 너비 제한 */
-    width: 100%; /* 반응형을 위해 기본 100% 설정 후 max-width 적용 */
+    max-width: 200px;
+    width: 100%;
     padding: 12px 15px;
     margin-top: 5px;
     border: 1px solid #8c7eff55;
@@ -240,16 +241,15 @@
 
   /* ✅ 프로모션 상세 사이드바 스타일 (메인 레이아웃 안에) */
   .promo-details-main-sidebar {
-    flex-grow: 0; /* 공간을 확장하지 않음 */
-    flex-shrink: 0; /* 줄어들지 않음 */
-    width: 280px; /* 사이드바 고정 너비 */
-    background: #1e1430; /* 카드와 동일한 배경 */
-    padding: 25px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 380px; /* ✅ 사이드바 너비 증가 */
+    background: #1e1430;
+    padding: 30px; /* ✅ 패딩 증가 */
     border-radius: 18px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1);
     border: 1px solid #8c7eff33;
     box-sizing: border-box;
-    /* 초기에는 아무 내용도 없으므로 최소 높이를 주거나 내용이 채워지면 자연스럽게 늘어남 */
     min-height: 200px; 
   }
   .promo-details-main-sidebar h3 {
@@ -261,23 +261,23 @@
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
   .promo-details-main-sidebar p {
-    font-size: 14px;
+    font-size: 15px; /* ✅ 폰트 크기 증가 */
     line-height: 1.6;
     color: #c9d2e0;
     margin-bottom: 10px;
   }
-  .promo-details-main-sidebar ul {
+  .promo-details-sidebar ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .promo-details-main-sidebar ul li {
-    font-size: 14px;
+  .promo-details-sidebar ul li {
+    font-size: 15px; /* ✅ 폰트 크기 증가 */
     line-height: 1.6;
     color: #c9d2e0;
     margin-bottom: 5px;
   }
-  .promo-details-main-sidebar ul li strong {
+  .promo-details-sidebar ul li strong {
     color: #5effc9;
   }
 
@@ -583,6 +583,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let hashBonus = parseFloat(document.getElementById("hash").value);
     let applyRamPromotion = document.getElementById("applyRamPromotion").checked; // RAM 프로모션 적용 체크박스 값
 
+
     if (isNaN(invest) || isNaN(days) || !selectedMonth || !selectedDay) {
       document.getElementById("resultRam").innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요!</div>";
       return;
@@ -748,7 +749,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let daysTo2x = "미달성";
     let daysTo3x = "미달성";
     let daysTo4x = "미달성";
-    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (너무 길어지는 것 방지)
+    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (무한 루프 방지)
 
     const todayDate = new Date();
     const startDate = new Date(startDateStr);
