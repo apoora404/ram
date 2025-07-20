@@ -284,7 +284,7 @@
     <label>할당 기간(일):</label>
     <input type="number" id="days" placeholder="예: 120">
 
-    <label>예치 시작일 (2025년):</label>
+    <label>스테이킹 시작일 (2025년):</label>
     <div class="date-select-group">
       <select id="ramStartMonth"></select> <select id="ramStartDay"></select> </div>
 
@@ -316,7 +316,7 @@
     <label>초기 CPI 투자 금액(USDT):</label>
     <input type="number" id="initialInvest" placeholder="예: 5000">
 
-    <label>CPI 예치 시작일 (2025년):</label>
+    <label>CPI 스테이킹 시작일 (2025년):</label>
     <div class="date-select-group">
       <select id="cpiStartMonth"></select> <select id="cpiStartDay"></select> </div>
 
@@ -454,7 +454,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let start = new Date(startDateStr);
     
     if (isNaN(start.getTime())) {
-        document.getElementById("resultRam").innerHTML = "<div class='alert-box alert-warning'>유효하지 않은 예치 시작일입니다!</div>"; // ID 변경
+        document.getElementById("resultRam").innerHTML = "<div class='alert-box alert-warning'>유효하지 않은 스테이킹 시작일입니다!</div>"; // ID 변경
         return;
     }
 
@@ -525,10 +525,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "<div class='result-item'>만기일 까지 남은 총 이자: <span class='highlight'>" + total_bonus_remaining_until_maturity.toFixed(2) + "</span> USDT</div></div>" + 
 
       "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
-      "<div class='result-item'>예치 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
-      "<div class='result-item'>현재까지 받은 총 이자(예치+보너스): <span class='highlight'>" + total_combined_received_so_far.toFixed(2) + "</span> USDT</div>" + 
-      "<div class='result-item'>만기일 까지 남은 총 이자(예치+보너스): <span class='highlight'>" + total_combined_remaining_until_maturity.toFixed(2) + "</span> USDT</div>" + 
-      "<div class='result-item'>만기일까지 받는 총 이자(예치+보너스): <span class='highlight'>" + total_until_maturity_combined.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>스테이킹 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
+      "<div class='result-item'>현재까지 받은 총 이자(스테이킹+보너스): <span class='highlight'>" + total_combined_received_so_far.toFixed(2) + "</span> USDT</div>" + 
+      "<div class='result-item'>만기일 까지 남은 총 이자(스테이킹+보너스): <span class='highlight'>" + total_combined_remaining_until_maturity.toFixed(2) + "</span> USDT</div>" + 
+      "<div class='result-item'>만기일까지 받는 총 이자(스테이킹+보너스): <span class='highlight'>" + total_until_maturity_combined.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
       dailyWeeklyMonthlyDisplay + 
       "</div>";
@@ -577,11 +577,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const startDateStr = `2025-${selectedMonth}-${selectedDay}`;
 
     if (isNaN(initialInvest) || initialInvest <= 0 || !selectedMonth || !selectedDay) {
-        document.getElementById("resultCpi").innerHTML = "<div class='alert-box alert-warning'>초기 투자 금액과 예치 시작일을 올바르게 입력해주세요!</div>";
+        document.getElementById("resultCpi").innerHTML = "<div class='alert-box alert-warning'>초기 투자 금액과 스테이킹 시작일을 올바르게 입력해주세요!</div>";
         return;
     }
 
-    const dailyYieldRate = 0.01; // 일일 1% 수익률
+    const dailyYieldRate = 0.01; // 일일 1% 해제율율
     const reinvestCycleDays = 7; // 재투자 주기 7일
     const minReinvestAmount = 50; // 최소 재투자 금액 50 USDT
 
@@ -598,12 +598,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let daysTo2x = "미달성";
     let daysTo3x = "미달성";
     let daysTo4x = "미달성";
-    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (너무 길어지는 것 방지)
+    let maxSimulationDays = 365 * 2; // 최대 2년 시뮬레이션 (너무 길어지는 것 방지)
 
     const todayDate = new Date();
     const startDate = new Date(startDateStr);
     if (isNaN(startDate.getTime())) {
-        document.getElementById("resultCpi").innerHTML = "<div class='alert-box alert-warning'>유효하지 않은 예치 시작일입니다!</div>";
+        document.getElementById("resultCpi").innerHTML = "<div class='alert-box alert-warning'>유효하지 않은 스테이킹 시작일입니다!</div>";
         return;
     }
     const daysPassedSinceStart = Math.floor((todayDate - startDate) / (1000 * 60 * 60 * 24));
@@ -635,7 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-    // 현재 예치 정보 계산 (사용자가 설정한 시작일부터 현재까지)
+    // 현재 스테이킹 정보 계산 (사용자가 설정한 시작일부터 현재까지)
     let currentCpiAtToday = initialInvest;
     let currentAccumulatedInterestForReinvest = 0;
     let todayReinvestCount = 0;
@@ -658,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (daysToNextReinvestCycle === reinvestCycleDays) {
         daysToNextReinvestCycle = 7;
     }
-    if (daysPassedSinceStart < 0) { // 예치 시작일이 미래일 경우
+    if (daysPassedSinceStart < 0) { // 스테이킹 시작일이 미래일 경우
         daysToNextReinvestCycle = 7;
     }
 
@@ -667,23 +667,23 @@ document.addEventListener("DOMContentLoaded", function () {
       "<div class='result-section'>" +
       "<div class='result-title'>CPI 성장 목표 달성 시점 예측</div>" +
       "<div class='result-item'>초기 투자 금액: <span class='highlight'>" + initialInvest.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>초기 투자금 대비 2배 달성 시점: <span class='highlight'>" + daysTo2x + "</span> 일차</div>" +
-      "<div class='result-item'>초기 투자금 대비 3배 달성 시점: <span class='highlight'>" + daysTo3x + "</span> 일차</div>" +
-      "<div class='result-item'>초기 투자금 대비 4배 달성 시점: <span class='highlight'>" + daysTo4x + "</span> 일차</div>" +
+      "<div class='result-item'>CPI 2배 달성 시점: <span class='highlight'>" + daysTo2x + "</span> 일차</div>" +
+      "<div class='result-item'>CPI 3배 달성 시점: <span class='highlight'>" + daysTo3x + "</span> 일차</div>" +
+      "<div class='result-item'>CPI 4배 달성 시점: <span class='highlight'>" + daysTo4x + "</span> 일차</div>" +
       "</div>" +
       "<div class='result-section'>" +
-      "<div class='result-title'>현재 예치 정보</div>" +
-      "<div class='result-item'>예치 시작일로부터: <span class='highlight'>" + daysPassedSinceStart + "</span> 일 경과</div>" +
-      "<div class='result-item'>현재 CPI 총액: <span class='highlight'>" + currentCpiAtToday.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-title'>현재 스테이킹 정보</div>" +
+      "<div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>" + daysPassedSinceStart + "</span> 일 경과</div>" +
+      "<div class='result-item'>현재 총 CPI : <span class='highlight'>" + currentCpiAtToday.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>현재까지 재투자된 금액: <span class='highlight'>" + todayReinvestedAmount.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>현재까지 재투자 횟수: <span class='highlight'>" + todayReinvestCount + "</span> 회</div>" +
       "<div class='result-item'>다음 재투자까지: <span class='highlight'>" + daysToNextReinvestCycle + "</span> 일 남음</div>" +
       "</div>" +
       "<div class='result-section'>" +
       "<div class='result-title'>총 시뮬레이션 요약 (" + daysSimulated + "일 기준)</div>" +
-      "<div class='result-item'>최종 CPI 총액: <span class='highlight'>" + currentCpiTotal.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>총 발생 이자 (누적): <span class='highlight'>" + totalGeneratedInterest.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>총 재투자된 이자: <span class='highlight'>" + totalReinvestedAmount.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>현재 총 CPI : <span class='highlight'>" + currentCpiTotal.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>총 CPI 해제량 (누적): <span class='highlight'>" + totalGeneratedInterest.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>총 재투자된 CPI 배포: <span class='highlight'>" + totalReinvestedAmount.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>총 재투자 횟수: <span class='highlight'>" + totalReinvestmentCount + "</span> 회</div>" +
       "</div>";
   };
