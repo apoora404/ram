@@ -14,8 +14,6 @@
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
-    display: flex; /* body에 flex 적용 */
-    justify-content: center; /* 중앙 정렬 */
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
@@ -233,10 +231,10 @@
   }
   /* 각 탭 콘텐츠 자체는 flex item이 아니라 block으로 유지 */
   .tab-content {
-    display: none; /* 기본적으로 숨김 */
+    display: none;
   }
   .tab-content.active {
-    display: block; /* 활성화된 탭만 보임 */
+    display: block;
   }
 
   /* ✅ 프로모션 상세 사이드바 스타일 (메인 레이아웃 안에) */
@@ -397,8 +395,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const promoSidebar = document.getElementById('promoSidebar');
 
   // 프로모션 상세 이미지 (HTML 문자열로 저장)
-  const cpiPromoImageHtml = `<img src="http://googleusercontent.com/file_content/34" alt="CPI 프로모션 안내">`;
-  const ramPromoImageHtml = `<img src="http://googleusercontent.com/file_content/35" alt="RAM 프로모션 안내">`;
+  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="CPI 프로모션 안내">`;
+  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="RAM 프로모션 안내">`;
 
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -696,7 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let daysTo2x = "미달성";
     let daysTo3x = "미달성";
     let daysTo4x = "미달성";
-    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (무한 루프 방지)
+    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (너무 길어지는 것 방지)
 
     const todayDate = new Date();
     const startDate = new Date(startDateStr);
