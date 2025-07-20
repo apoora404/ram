@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <style>
   body {
@@ -168,9 +167,11 @@
   </div>
 </div>
 
-<button onclick="calc()">계산하기</button>
+<button onclick="calc()">計算하기</button>
 <div id="result"></div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -181,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
     disableMobile: true   // ✅ 항상 달력 팝업으로 강제
   });
 
-  // ✅ 계산 로직 (여기로 이동)
+  // ✅ 계산 로직
   const dayBonusTable = [
     {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
     {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
