@@ -93,6 +93,9 @@
     background-position: right 8px top 50%;
     background-size: 16px;
   }
+  input::placeholder {
+    color: #8a96a8;
+  }
   button {
     margin-top: 30px;
     width: 100%;
@@ -161,7 +164,7 @@
     color: #ff6b6b;
     border: 1px solid #ff4d4d;
   }
-  /* CPI 프로모션 체크박스 스타일 */
+  /* CPI 및 RAM 프로모션 체크박스 스타일 */
   .cpi-promo-checkbox, .ram-promo-checkbox {
     display: flex;
     align-items: center;
@@ -367,6 +370,7 @@
             <input type="checkbox" id="applyRamPromotion">
             <span>RAM 프로모션 적용</span>
         </label>
+        
         <button onclick="calculateRam()">계산하기</button>
         <div id="resultRam"></div>
       </div>
@@ -471,18 +475,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return bonus;
   }
 
-  function getBaseRate(invest, promo) { // promoRadioSelected 값을 promo 인자로 받음
-    if (promo === "promo") {
-      if (invest < 1000) return 0.0050;
-      if (invest < 5000) return 0.0053;
-      if (invest < 10000) return 0.00578;
-      return 0.00693;
-    } else { /* 기본 이율 */
+  // ✅ getBaseRate 함수에서 promo 인자 제거 (더 이상 사용하지 않음)
+  function getBaseRate(invest) { // promo 인자 제거
       if (invest < 1000) return 0.0050;
       if (invest < 5000) return 0.0053;
       if (invest < 10000) return 0.0055;
       return 0.0063;
-    }
   }
 
   function getBonusRAM(invest, days) {
@@ -498,12 +496,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (bonusRAM === 0) return 0;
 
     // 'RAM 프로모션 적용' 체크박스 활성화 시 해당 보상율 적용
+    // RAM 프로모션 참여 조건 (120일 이상 & 1000 USDT 이상)도 여기서 체크
     if (applyRamPromotionChecked && mainInvestAmount >= 1000) { 
         if (mainInvestAmount >= 1000 && mainInvestAmount < 5000) return 0.0053; // 0.53%
         if (mainInvestAmount >= 5000 && mainInvestAmount < 10000) return 0.00578; // 0.578%
         if (mainInvestAmount >= 10000) return 0.00693; // 0.693%
     }
-    // 기본 보너스 이율 (기존 프로모션 radio 버튼과 관계없이 적용, bonusRAM 자체의 구간 기준)
+    // 'RAM 프로모션 적용' 체크박스가 비활성화되었거나 조건 미충족 시 기본 보너스 이율 적용
     if (bonusRAM < 1000) return 0.0050;
     if (bonusRAM < 5000) return 0.0053;
     if (bonusRAM < 10000) return 0.0055;
@@ -520,8 +519,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const startDateStr = `2025-${selectedMonth}-${selectedDay}`;
     
     let hashBonus = parseFloat(document.getElementById("hash").value);
-    let promoRadioSelected = document.querySelector('input[name="promoRam"]:checked').value; // 기존 프로모션 radio 버튼 값
-    let applyRamPromotion = document.getElementById("applyRamPromotion").checked; // ✅ RAM 프로모션 적용 체크박스 값
+    // ✅ 라디오 버튼 제거로 인해 promo 변수 선언 방식 변경 (더 이상 사용하지 않음)
+    let applyRamPromotion = document.getElementById("applyRamPromotion").checked; // RAM 프로모션 적용 체크박스 값
+
 
     if (isNaN(invest) || isNaN(days) || !selectedMonth || !selectedDay) {
       document.getElementById("resultRam").innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요!</div>";
@@ -541,7 +541,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let remainDays = days - diffDays;
     if (remainDays < 0) remainDays = 0;
 
-    let baseRate = getBaseRate(invest, promoRadioSelected); // 기존 프로모션 radio 버튼 사용 (메인 RAM 이율)
+    // ✅ getBaseRate 함수 호출 시 promo 인자 제거
+    let baseRate = getBaseRate(invest); 
     let dayBonus = getDayBonus(days);
     let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
     let total_main = dailyInterest_main * days;
@@ -549,7 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let bonusRAM = getBonusRAM(invest, days); // 10%, 15%, 20% 추가 예치 RAM
     // ✅ getBonusRate에 'RAM 프로모션 적용' 체크박스 상태와 메인 투자 금액 전달
-    let bonusRate = getBonusRate(bonusRAM, applyRamPromotion, invest); 
+    let bonusRate = getBonusRate(bonusRAM, applyRamPromotion && days >= 120 && invest >= 1000, invest); 
     
     let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3; // 2400일 계수 고정
     
