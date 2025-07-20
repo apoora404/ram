@@ -319,24 +319,24 @@ document.addEventListener("DOMContentLoaded", function () {
     let bonusRate = getBonusRate(bonusRAM);
     let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3;
     
-    // ✅ 만기일까지의 보너스 이자만 합산
+    // 만기일까지의 보너스 이자만 합산
     let bonus_interest_until_maturity = dailyInterest_bonus * days; 
     let bonus_interest_remaining = dailyInterest_bonus * (2400 - days);
 
-    // ✅ 총합 (만기일까지 받은 총 이자)
+    // 총합 (만기일까지 받은 총 이자)
     let total_until_maturity_combined = total_main + bonus_interest_until_maturity; 
     
-    // ✅ 1일/1주일/1달 이자 (만기 여부에 따라 분리)
+    // ✅ 1일/1주일/1달 이자 (앞으로 수령할 수 있는 이자)
     let dailyInterestDisplay = "";
-    if (remainDays > 0) { // 만기일이 아직 남은 경우
-        let daily_total_active = dailyInterest_main + dailyInterest_bonus; // 예치+보너스 일일 이자
-        dailyInterestDisplay = "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total_active.toFixed(2) + "</span> USDT</div>" +
-                               "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total_active * 7).toFixed(2) + "</span> USDT</div>" +
-                               "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total_active * 30).toFixed(2) + "</span> USDT</div>";
-    } else { // 만기일이 도래했거나 지난 경우 (보너스 RAM만 계산)
-        dailyInterestDisplay = "<div class='result-item'>1일 보너스 RAM 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
-                               "<div class='result-item'>1주일 보너스 RAM 이자(7일): <span class='highlight'>" + (dailyInterest_bonus * 7).toFixed(2) + "</span> USDT</div>" +
-                               "<div class='result-item'>1달 보너스 RAM 이자(30일): <span class='highlight'>" + (dailyInterest_bonus * 30).toFixed(2) + "</span> USDT</div>";
+    if (remainDays > 0) { // 만기일이 아직 남은 경우: 예치+보너스 이자 모두 수령
+        let daily_total_receivable = dailyInterest_main + dailyInterest_bonus; 
+        dailyInterestDisplay = "<div class='result-item'>앞으로 받을 1일 총 이자: <span class='highlight'>" + daily_total_receivable.toFixed(2) + "</span> USDT</div>" +
+                               "<div class='result-item'>앞으로 받을 1주일 총 이자(7일): <span class='highlight'>" + (daily_total_receivable * 7).toFixed(2) + "</span> USDT</div>" +
+                               "<div class='result-item'>앞으로 받을 1달 총 이자(30일): <span class='highlight'>" + (daily_total_receivable * 30).toFixed(2) + "</span> USDT</div>";
+    } else { // 만기일이 도래했거나 지난 경우: 보너스 RAM 이자만 수령
+        dailyInterestDisplay = "<div class='result-item'>앞으로 받을 1일 보너스 RAM 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
+                               "<div class='result-item'>앞으로 받을 1주일 보너스 RAM 이자(7일): <span class='highlight'>" + (dailyInterest_bonus * 7).toFixed(2) + "</span> USDT</div>" +
+                               "<div class='result-item'>앞으로 받을 1달 보너스 RAM 이자(30일): <span class='highlight'>" + (dailyInterest_bonus * 30).toFixed(2) + "</span> USDT</div>";
     }
 
     // 원금 회수 예상 (보너스 포함)은 여전히 일일 총 이자 기준
