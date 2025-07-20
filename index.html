@@ -8,22 +8,22 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
-    max-width: 950px; /* ✅ 전체 너비 확장 */
+    max-width: 950px; /* 전체 너비 확장 */
     margin: 30px auto;
-    padding: 0 20px;
+    padding: 0 20px; /* 좌우 패딩만 유지 */
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
-    display: flex;
-    justify-content: center;
+    display: flex; /* body에 flex 적용 */
+    justify-content: center; /* 중앙 정렬 */
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
     display: flex;
     gap: 25px; /* 계산기와 사이드바 간격 */
     flex-wrap: wrap; /* 반응형 시 줄바꿈 */
-    max-width: 950px; /* ✅ 전체 최대 너비 */
-    width: 100%;
+    max-width: 950px; /* 전체 최대 너비 */
+    width: 100%; /* 너비 100% (max-width까지) */
   }
   h2 {
     text-align: center;
@@ -33,8 +33,8 @@
     text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
   .card {
-    flex: 1;
-    min-width: 380px;
+    flex: 1; /* 계산기 카드가 남은 공간을 채우도록 */
+    min-width: 380px; /* 계산기 카드의 최소 너비 */
     background: #1e1430; /* 카드 배경색 */
     padding: 25px;
     border-radius: 18px;
@@ -243,43 +243,24 @@
   .promo-details-main-sidebar {
     flex-grow: 0;
     flex-shrink: 0;
-    width: 380px; /* ✅ 사이드바 너비 증가 */
+    width: 380px; /* 사이드바 너비 증가 */
     background: #1e1430;
-    padding: 30px; /* ✅ 패딩 증가 */
+    padding: 30px; /* 패딩 증가 */
     border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.05);
     border: 1px solid #8c7eff33;
     box-sizing: border-box;
-    min-height: 200px; 
+    display: flex; /* 내부 콘텐츠 정렬을 위해 flex 사용 */
+    align-items: center; /* 이미지를 세로 중앙 정렬 */
+    justify-content: center; /* 이미지를 가로 중앙 정렬 */
   }
-  .promo-details-main-sidebar h3 {
-    color: #5effc9;
-    font-size: 18px;
-    margin-top: 0;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+  /* ✅ 사이드바 내부 이미지 스타일 */
+  .promo-details-main-sidebar img {
+    max-width: 100%; /* 너비에 맞게 조절 */
+    height: auto; /* 높이 자동 조절 */
+    border-radius: 10px; /* 이미지 자체도 둥글게 */
   }
-  .promo-details-main-sidebar p {
-    font-size: 15px; /* ✅ 폰트 크기 증가 */
-    line-height: 1.6;
-    color: #c9d2e0;
-    margin-bottom: 10px;
-  }
-  .promo-details-sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .promo-details-sidebar ul li {
-    font-size: 15px; /* ✅ 폰트 크기 증가 */
-    line-height: 1.6;
-    color: #c9d2e0;
-    margin-bottom: 5px;
-  }
-  .promo-details-sidebar ul li strong {
-    color: #5effc9;
-  }
+
 
   /* 반응형 디자인 */
   @media (max-width: 899px) { /* 전체 레이아웃이 좁아지면 사이드바를 아래로 */
@@ -293,6 +274,7 @@
     .promo-details-main-sidebar {
       width: 100%; /* 전체 너비 */
       order: 1; /* 사이드바를 위로 이동 */
+      min-height: unset; /* 내용이 이미지 하나이므로 최소 높이 불필요 */
     }
     .tabs { order: 2; } /* 탭을 사이드바 아래로 이동 */
     #cpiCalculator, #ramCalculator { order: 3; } /* 계산기 콘텐츠를 탭 아래로 이동 */
@@ -414,44 +396,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const promoSidebar = document.getElementById('promoSidebar');
 
-  // 프로모션 상세 내용 (HTML 문자열로 저장)
-  const cpiPromoContent = `
-    <h3>CPI 프로모션 안내</h3>
-    <p>기존 CPI 주문 보유자가 1000 USDT 이상 충전 시, CPI 시스템 보너스 주문 10% 추가 지급됩니다. 이 보너스 주문은 USDL 풀에서 2%의 일일 수익률로 발생하며, 해제된 USDL CPI는 다른 풀과 마찬가지로 재투자 또는 출금할 수 있습니다.</p>
-    <p><strong>참여 조건:</strong></p>
-    <ul>
-      <li>기존 CPI 주문 보유자</li>
-      <li>최소 <strong>1000 USDT</strong> 이상 초기 입금 시 프로모션 보너스 대상</li>
-    </ul>
-    <p><strong>보너스 계산 예시:</strong></p>
-    <ul>
-      <li>1000 USDT 추가 예치 시 → 100 USDL 보너스 자동 생성</li>
-      <li>생성된 100 USDL은 <strong>매일 2%</strong>씩 해제 (수익 발생)</li>
-    </ul>
-  `;
-
-  const ramPromoContent = `
-    <h3>RAM 프로모션 안내</h3>
-    <p><strong>미친 더블 보너스!</strong></p>
-    <ul>
-      <li><strong>프로모션 기간:</strong> 7월 17일 ~ 12월 31일 (하반기 전체)</li>
-      <li><strong>참여 방법:</strong> RAM 스테이킹 단일 예치</li>
-      <li><strong>참여 조건:</strong>
-        <ul>
-          <li>최소 <strong>120일 이상</strong></li>
-          <li>최소 <strong>1000 USDT 이상</strong> 예치 시 해당</li>
-        </ul>
-      </li>
-      <li><strong>구간 보너스 안내 (RAM 추가 예치 & 보너스 보상율):</strong>
-        <ul>
-          <li><strong>1001~5000 USDT:</strong> 할당의 <strong>10%</strong> 램 추가 예치, 보너스 보상율 <strong>0.53%</strong></li>
-          <li><strong>5001~10000 USDT:</strong> 할당의 <strong>15%</strong> 램 추가 예치, 보너스 보상율 <strong>0.578%</strong></li>
-          <li><strong>10001 USDT 이상:</strong> 할당의 <strong>20%</strong> 램 추가 예치, 보너스 보상율 <strong>0.693%</strong></li>
-            </ul>
-          </li>
-        </ul>
-        <p><em>* 모든 추가 예치 RAM은 2400일 상품으로 자동 생성됩니다.</em></p>
-  `;
+  // 프로모션 상세 이미지 (HTML 문자열로 저장)
+  const cpiPromoImageHtml = `<img src="http://googleusercontent.com/file_content/34" alt="CPI 프로모션 안내">`;
+  const ramPromoImageHtml = `<img src="http://googleusercontent.com/file_content/35" alt="RAM 프로모션 안내">`;
 
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -464,11 +411,11 @@ document.addEventListener("DOMContentLoaded", function () {
     tabContents.forEach(content => content.classList.remove('active'));
     document.getElementById(targetTab + 'Calculator').classList.add('active');
 
-    // 사이드바 내용 업데이트
+    // 사이드바 내용 이미지로 업데이트
     if (targetTab === 'cpi') {
-      promoSidebar.innerHTML = cpiPromoContent;
+      promoSidebar.innerHTML = cpiPromoImageHtml;
     } else if (targetTab === 'ram') {
-      promoSidebar.innerHTML = ramPromoContent;
+      promoSidebar.innerHTML = ramPromoImageHtml;
     }
   }
 
