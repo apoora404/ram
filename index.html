@@ -8,12 +8,21 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
-    max-width: 850px; /* 전체 너비 확장 (사이드바 공간 확보) */
     margin: 30px auto;
-    padding: 20px;
+    padding: 0 20px; /* 좌우 패딩만 유지 */
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
+    display: flex; /* body에 flex 적용 */
+    justify-content: center; /* 중앙 정렬 */
+  }
+  /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
+  .main-page-layout {
+    display: flex;
+    gap: 25px; /* 계산기와 사이드바 간격 */
+    flex-wrap: wrap; /* 반응형 시 줄바꿈 */
+    max-width: 900px; /* 전체 최대 너비 */
+    width: 100%; /* 너비 100% (max-width까지) */
   }
   h2 {
     text-align: center;
@@ -23,6 +32,8 @@
     text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
   .card {
+    flex: 1; /* 계산기 카드가 남은 공간을 채우도록 */
+    min-width: 380px; /* 계산기 카드의 최소 너비 */
     background: #1e1430; /* 카드 배경색 */
     padding: 25px;
     border-radius: 18px;
@@ -92,9 +103,6 @@
     background-repeat: no-repeat;
     background-position: right 8px top 50%;
     background-size: 16px;
-  }
-  input::placeholder {
-    color: #8a96a8;
   }
   button {
     margin-top: 30px;
@@ -222,6 +230,7 @@
     color: white;
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
+  /* 각 탭 콘텐츠 자체는 flex item이 아니라 block으로 유지 */
   .tab-content {
     display: none; /* 기본적으로 숨김 */
   }
@@ -229,26 +238,21 @@
     display: block; /* 활성화된 탭만 보임 */
   }
 
-  /* 계산기 레이아웃 (인풋 + 사이드바) */
-  .calculator-layout {
-    display: flex;
-    gap: 25px; /* 입력 영역과 사이드바 간격 */
-    flex-wrap: wrap; /* 모바일에서 자동 줄바꿈 */
-  }
-  .input-area {
-    flex: 1; /* 입력 영역이 최대한 공간을 차지 */
-    min-width: 300px; /* 최소 너비 지정 */
-  }
-  .promo-details-sidebar {
-    width: 250px; /* 사이드바 고정 너비 */
-    background: #120c24; /* 사이드바 배경색 */
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: inset 0 0 8px rgba(140, 126, 255, 0.05); /* 내부 그림자 */
-    border: 1px solid #8c7eff20;
+  /* ✅ 프로모션 상세 사이드바 스타일 (메인 레이아웃 안에) */
+  .promo-details-main-sidebar {
+    flex-grow: 0; /* 공간을 확장하지 않음 */
+    flex-shrink: 0; /* 줄어들지 않음 */
+    width: 280px; /* 사이드바 고정 너비 */
+    background: #1e1430; /* 카드와 동일한 배경 */
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1);
+    border: 1px solid #8c7eff33;
     box-sizing: border-box;
+    /* 초기에는 아무 내용도 없으므로 최소 높이를 주거나 내용이 채워지면 자연스럽게 늘어남 */
+    min-height: 200px; 
   }
-  .promo-details-sidebar h3 {
+  .promo-details-main-sidebar h3 {
     color: #5effc9;
     font-size: 18px;
     margin-top: 0;
@@ -256,52 +260,93 @@
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
-  .promo-details-sidebar p {
+  .promo-details-main-sidebar p {
     font-size: 14px;
     line-height: 1.6;
     color: #c9d2e0;
     margin-bottom: 10px;
   }
-  .promo-details-sidebar ul {
+  .promo-details-main-sidebar ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .promo-details-sidebar ul li {
+  .promo-details-main-sidebar ul li {
     font-size: 14px;
     line-height: 1.6;
     color: #c9d2e0;
     margin-bottom: 5px;
   }
-  .promo-details-sidebar ul li strong {
+  .promo-details-main-sidebar ul li strong {
     color: #5effc9;
   }
 
   /* 반응형 디자인 */
-  @media (max-width: 480px) {
-    .calculator-layout {
-      flex-direction: column; /* 모바일에서 세로로 정렬 */
-      gap: 15px;
+  @media (max-width: 899px) { /* 전체 레이아웃이 좁아지면 사이드바를 아래로 */
+    .main-page-layout {
+      flex-direction: column;
+      max-width: 600px; /* 컬럼으로 바뀌면 카드 최대 너비 */
     }
-    .input-area {
-      min-width: unset; /* 모바일에서 최소 너비 제한 해제 */
+    .card {
+      min-width: unset; /* 최소 너비 제한 해제 */
+    }
+    .promo-details-main-sidebar {
+      width: 100%; /* 전체 너비 */
+      order: 1; /* 사이드바를 위로 이동 */
+    }
+    .tabs { order: 2; } /* 탭을 사이드바 아래로 이동 */
+    #cpiCalculator, #ramCalculator { order: 3; } /* 계산기 콘텐츠를 탭 아래로 이동 */
+  }
+
+  @media (max-width: 480px) { /* 모바일에서 더 세부 조정 */
+    body {
+      padding: 15px;
+    }
+    .card {
+      padding: 18px;
+    }
+    h2 {
+      font-size: 24px;
+    }
+    button {
+      font-size: 16px;
+      padding: 12px;
+    }
+    .result-section {
+      padding: 15px;
+    }
+    .result-title {
+      font-size: 16px;
+    }
+    .result-item, .highlight {
+      font-size: 14px;
+    }
+    .date-select-group {
+      flex-direction: column;
+    }
+    input[type="number"],
+    .date-select-group select {
+      max-width: 100%;
+    }
+    .tabs {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tab-button {
       width: 100%;
-    }
-    .promo-details-sidebar {
-      width: 100%; /* 모바일에서 전체 너비 */
     }
   }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="tabs">
-    <button class="tab-button active" data-tab="cpi">CPI 계산기</button>
-    <button class="tab-button" data-tab="ram">RAM 계산기</button>
-  </div>
+<div class="main-page-layout">
+  <div class="card">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="cpi">CPI 계산기</button>
+      <button class="tab-button" data-tab="ram">RAM 계산기</button>
+    </div>
 
-  <div id="cpiCalculator" class="tab-content active">
-    <div class="calculator-layout">
+    <div id="cpiCalculator" class="tab-content active">
       <div class="input-area">
         <h2>CPI 계산기</h2>
 
@@ -322,25 +367,9 @@
         <button onclick="calculateCpiGrowth()">계산하기</button>
         <div id="resultCpi"></div>
       </div>
-      <div class="promo-details-sidebar">
-        <h3>CPI 프로모션 안내</h3>
-        <p>기존 CPI 주문 보유자가 1000 USDT 이상 충전 시, CPI 시스템 보너스 주문 10% 추가 지급됩니다. 이 보너스 주문은 USDL 풀에서 2%의 일일 수익률로 발생하며, 해제된 USDL CPI는 다른 풀과 마찬가지로 재투자 또는 출금할 수 있습니다.</p>
-        <p><strong>참여 조건:</strong></p>
-        <ul>
-          <li>기존 CPI 주문 보유자</li>
-          <li>최소 <strong>1000 USDT</strong> 이상 초기 입금 시 프로모션 보너스 대상</li>
-        </ul>
-        <p><strong>보너스 계산 예시:</strong></p>
-        <ul>
-          <li>1000 USDT 추가 예치 시 → 100 USDL 보너스 자동 생성</li>
-          <li>생성된 100 USDL은 <strong>매일 2%</strong>씩 해제 (수익 발생)</li>
-        </ul>
-      </div>
     </div>
-  </div>
 
-  <div id="ramCalculator" class="tab-content">
-    <div class="calculator-layout">
+    <div id="ramCalculator" class="tab-content">
       <div class="input-area">
         <h2>RAM 계산기</h2>
 
@@ -374,48 +403,83 @@
         <button onclick="calculateRam()">계산하기</button>
         <div id="resultRam"></div>
       </div>
-      <div class="promo-details-sidebar">
-        <h3>RAM 프로모션 안내</h3>
-        <p><strong>미친 더블 보너스!</strong></p>
-        <ul>
-          <li><strong>프로모션 기간:</strong> 7월 17일 ~ 12월 31일 (하반기 전체)</li>
-          <li><strong>참여 방법:</strong> RAM 스테이킹 단일 예치</li>
-          <li><strong>참여 조건:</strong>
-            <ul>
-              <li>최소 <strong>120일 이상</strong></li>
-              <li>최소 <strong>1000 USDT 이상</strong> 예치 시 해당</li>
-            </ul>
-          </li>
-          <li><strong>구간 보너스 안내 (RAM 추가 예치 & 보너스 보상율):</strong>
-            <ul>
-              <li><strong>1001~5000 USDT:</strong> 할당의 <strong>10%</strong> 램 추가 예치, 보너스 보상율 <strong>0.53%</strong></li>
-              <li><strong>5001~10000 USDT:</strong> 할당의 <strong>15%</strong> 램 추가 예치, 보너스 보상율 <strong>0.578%</strong></li>
-              <li><strong>10001 USDT 이상:</strong> 할당의 <strong>20%</strong> 램 추가 예치, 보너스 보상율 <strong>0.693%</strong></li>
-            </ul>
-          </li>
-        </ul>
-        <p><em>* 모든 추가 예치 RAM은 2400일 상품으로 자동 생성됩니다.</em></p>
-      </div>
     </div>
   </div>
+
+  <div class="promo-details-main-sidebar" id="promoSidebar">
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  const promoSidebar = document.getElementById('promoSidebar');
+
+  // 프로모션 상세 내용 (HTML 문자열로 저장)
+  const cpiPromoContent = `
+    <h3>CPI 프로모션 안내</h3>
+    <p>기존 CPI 주문 보유자가 1000 USDT 이상 충전 시, CPI 시스템 보너스 주문 10% 추가 지급됩니다. 이 보너스 주문은 USDL 풀에서 2%의 일일 수익률로 발생하며, 해제된 USDL CPI는 다른 풀과 마찬가지로 재투자 또는 출금할 수 있습니다.</p>
+    <p><strong>참여 조건:</strong></p>
+    <ul>
+      <li>기존 CPI 주문 보유자</li>
+      <li>최소 <strong>1000 USDT</strong> 이상 초기 입금 시 프로모션 보너스 대상</li>
+    </ul>
+    <p><strong>보너스 계산 예시:</strong></p>
+    <ul>
+      <li>1000 USDT 추가 예치 시 → 100 USDL 보너스 자동 생성</li>
+      <li>생성된 100 USDL은 <strong>매일 2%</strong>씩 해제 (수익 발생)</li>
+    </ul>
+  `;
+
+  const ramPromoContent = `
+    <h3>RAM 프로모션 안내</h3>
+    <p><strong>미친 더블 보너스!</strong></p>
+    <ul>
+      <li><strong>프로모션 기간:</strong> 7월 17일 ~ 12월 31일 (하반기 전체)</li>
+      <li><strong>참여 방법:</strong> RAM 스테이킹 단일 예치</li>
+      <li><strong>참여 조건:</strong>
+        <ul>
+          <li>최소 <strong>120일 이상</strong></li>
+          <li>최소 <strong>1000 USDT 이상</strong> 예치 시 해당</li>
+        </ul>
+      </li>
+      <li><strong>구간 보너스 안내 (RAM 추가 예치 & 보너스 보상율):</strong>
+        <ul>
+          <li><strong>1001~5000 USDT:</strong> 할당의 <strong>10%</strong> 램 추가 예치, 보너스 보상율 <strong>0.53%</strong></li>
+          <li><strong>5001~10000 USDT:</strong> 할당의 <strong>15%</strong> 램 추가 예치, 보너스 보상율 <strong>0.578%</strong></li>
+          <li><strong>10001 USDT 이상:</strong> 할당의 <strong>20%</strong> 램 추가 예치, 보너스 보상율 <strong>0.693%</strong></li>
+            </ul>
+          </li>
+        </ul>
+        <p><em>* 모든 추가 예치 RAM은 2400일 상품으로 자동 생성됩니다.</em></p>
+  `;
+
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabContents = document.querySelectorAll('.tab-content');
 
+  function switchTab(targetTab) {
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.tab-button[data-tab="${targetTab}"]`).classList.add('active');
+
+    tabContents.forEach(content => content.classList.remove('active'));
+    document.getElementById(targetTab + 'Calculator').classList.add('active');
+
+    // 사이드바 내용 업데이트
+    if (targetTab === 'cpi') {
+      promoSidebar.innerHTML = cpiPromoContent;
+    } else if (targetTab === 'ram') {
+      promoSidebar.innerHTML = ramPromoContent;
+    }
+  }
+
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
-      tabButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      tabContents.forEach(content => content.classList.remove('active'));
-      const targetTab = button.dataset.tab;
-      document.getElementById(targetTab + 'Calculator').classList.add('active');
+      switchTab(button.dataset.tab);
     });
   });
+
+  // 초기 탭 설정 (CPI 계산기)
+  switchTab('cpi');
 
 
   // ==========================================================
@@ -475,7 +539,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return bonus;
   }
 
-  // ✅ getBaseRate 함수에서 promo 인자 제거 (더 이상 사용하지 않음)
   function getBaseRate(invest) { // promo 인자 제거
       if (invest < 1000) return 0.0050;
       if (invest < 5000) return 0.0053;
@@ -491,7 +554,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return invest * 0.20;
   }
   
-  // ✅ RAM 미친 더블 보너스 보상율 함수 수정
   function getBonusRate(bonusRAM, applyRamPromotionChecked, mainInvestAmount) {
     if (bonusRAM === 0) return 0;
 
@@ -519,9 +581,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const startDateStr = `2025-${selectedMonth}-${selectedDay}`;
     
     let hashBonus = parseFloat(document.getElementById("hash").value);
-    // ✅ 라디오 버튼 제거로 인해 promo 변수 선언 방식 변경 (더 이상 사용하지 않음)
     let applyRamPromotion = document.getElementById("applyRamPromotion").checked; // RAM 프로모션 적용 체크박스 값
-
 
     if (isNaN(invest) || isNaN(days) || !selectedMonth || !selectedDay) {
       document.getElementById("resultRam").innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요!</div>";
@@ -541,15 +601,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let remainDays = days - diffDays;
     if (remainDays < 0) remainDays = 0;
 
-    // ✅ getBaseRate 함수 호출 시 promo 인자 제거
-    let baseRate = getBaseRate(invest); 
+    let baseRate = getBaseRate(invest); // 기본 이율 사용
     let dayBonus = getDayBonus(days);
     let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
     let total_main = dailyInterest_main * days;
     let recoveryDays_main = invest / dailyInterest_main;
 
     let bonusRAM = getBonusRAM(invest, days); // 10%, 15%, 20% 추가 예치 RAM
-    // ✅ getBonusRate에 'RAM 프로모션 적용' 체크박스 상태와 메인 투자 금액 전달
+    // getBonusRate에 'RAM 프로모션 적용' 체크박스 상태와 메인 투자 금액 전달
     let bonusRate = getBonusRate(bonusRAM, applyRamPromotion && days >= 120 && invest >= 1000, invest); 
     
     let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3; // 2400일 계수 고정
@@ -689,7 +748,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let daysTo2x = "미달성";
     let daysTo3x = "미달성";
     let daysTo4x = "미달성";
-    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (무한 루프 방지)
+    let maxSimulationDays = 365 * 10; // 최대 10년 시뮬레이션 (너무 길어지는 것 방지)
 
     const todayDate = new Date();
     const startDate = new Date(startDateStr);
