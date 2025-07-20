@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <title>RAM 요율 계산기</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <!-- ✅ Flatpickr CSS & JS CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -135,6 +137,7 @@
 <body>
 <div class="card">
 <h2>RAM 요율 계산기</h2>
+
 <label>할당 금액(USDT):</label>
 <input type="number" id="invest" placeholder="예: 5000">
 
@@ -171,17 +174,16 @@
 </div>
 
 <script>
+// ✅ Flatpickr 초기화
 document.addEventListener("DOMContentLoaded", function () {
-  // ✅ Flatpickr 초기화 (DOMContentLoaded 후 실행)
   flatpickr("#startDate", {
     dateFormat: "Y-m-d",
-    allowInput: true
+    allowInput: true,
+    disableMobile: true   // ✅ 항상 달력 팝업으로 강제
   });
 });
-</script>
 
-<script>
-/* ✅ 기존 계산 로직 그대로 (생략 가능하지만 필요하면 다시 붙여줌) */
+// ✅ 계산 로직
 const dayBonusTable = [
   {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
   {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
