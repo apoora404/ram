@@ -7,110 +7,126 @@
 
 <style>
   body {
-    font-family: 'Arial', sans-serif; /* 폰트 변경 가능 */
+    font-family: 'Arial', sans-serif;
     max-width: 600px;
     margin: 30px auto;
     padding: 20px;
-    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* 더 깊이 있는 그라데이션 배경 */
-    color: #e0e6f0; /* 전체적인 글자색 밝게 */
-    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+    background: linear-gradient(135deg, #0e0e1e, #1a0f2b);
+    color: #e0e6f0;
+    box-sizing: border-box;
   }
   h2 {
     text-align: center;
-    color: #8c7eff; /* 메인 강조색 (약간 더 밝은 보라색) */
-    font-size: 28px; /* 제목 크기 키움 */
+    color: #8c7eff;
+    font-size: 28px;
     margin-bottom: 25px;
-    text-shadow: 0 0 5px rgba(140, 126, 255, 0.5); /* 은은한 그림자 */
+    text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
   .card {
-    background: #1e1430; /* 카드 배경색 (더 깊은 보라색 계열) */
+    background: #1e1430;
     padding: 25px;
-    border-radius: 18px; /* 모서리 둥글기 증가 */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1); /* 더 강한 그림자 및 내부 그림자 */
-    border: 1px solid #8c7eff33; /* 은은한 테두리 */
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1);
+    border: 1px solid #8c7eff33;
   }
   label {
     display: block;
-    margin-top: 15px; /* 라벨 상단 마진 증가 */
+    margin-top: 15px;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #c9d2e0; /* 라벨 글자색 */
+    color: #c9d2e0;
     font-size: 15px;
   }
-  input, select {
-    width: 100%;
-    padding: 12px 15px; /* 패딩 증가 */
+  /* ✅ 입력 필드 및 선택 박스 너비 조정 */
+  input[type="number"],
+  .date-select-group select,
+  select:not(#hash) { /* 해시레이트 선택 박스는 100% 유지 */
+    max-width: 200px; /* 너비 제한 */
+    width: 100%; /* 반응형을 위해 기본 100% 설정 후 max-width 적용 */
+    padding: 12px 15px;
     margin-top: 5px;
-    border: 1px solid #8c7eff55; /* 테두리색 변경 */
-    border-radius: 10px; /* 모서리 둥글기 증가 */
-    background: #120c24; /* 입력 필드 배경색 (더 어둡게) */
-    color: #e0e6f0; /* 입력 필드 글자색 */
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); /* 움푹 들어간 효과 */
-    appearance: none; /* select 화살표 기본 스타일 제거 */
+    border: 1px solid #8c7eff55;
+    border-radius: 10px;
+    background: #120c24;
+    color: #e0e6f0;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
   }
-  select {
-    padding-right: 30px; /* 드롭다운 화살표 공간 확보 */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e6f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* 커스텀 화살표 아이콘 */
+  /* 해시레이트 선택 박스는 기존처럼 100% 너비 유지 */
+  select#hash {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 5px;
+    border: 1px solid #8c7eff55;
+    border-radius: 10px;
+    background: #120c24;
+    color: #e0e6f0;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-sizing: border-box;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e6f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
     background-repeat: no-repeat;
     background-position: right 8px top 50%;
     background-size: 16px;
   }
   input::placeholder {
-    color: #8a96a8; /* 플레이스홀더 색상 */
+    color: #8a96a8;
   }
   button {
-    margin-top: 30px; /* 버튼 상단 마진 증가 */
+    margin-top: 30px;
     width: 100%;
-    padding: 16px; /* 패딩 증가 */
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7); /* 더 강한 그라데이션 */
+    padding: 16px;
+    background: linear-gradient(45deg, #8c7eff, #6a4ef7);
     color: white;
-    font-size: 18px; /* 폰트 크기 키움 */
+    font-size: 18px;
     font-weight: bold;
     border: none;
-    border-radius: 12px; /* 모서리 둥글기 증가 */
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s ease; /* 호버 효과 부드럽게 */
-    box-shadow: 0 5px 15px rgba(140, 126, 255, 0.4); /* 버튼 그림자 */
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(140, 126, 255, 0.4);
   }
   button:hover {
     opacity: 0.95;
-    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+    transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(140, 126, 255, 0.6);
   }
   #result {
-    margin-top: 30px; /* 결과 섹션 상단 마진 증가 */
+    margin-top: 30px;
   }
   .result-section {
     margin-bottom: 20px;
     padding: 20px;
-    border-radius: 15px; /* 모서리 둥글기 증가 */
+    border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
   .result-title {
     font-weight: bold;
-    font-size: 18px; /* 타이틀 크기 키움 */
+    font-size: 18px;
     margin-bottom: 10px;
     padding-bottom: 5px;
-    border-bottom: 1px solid rgba(255,255,255,0.1); /* 얇은 구분선 */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
   }
   .result-item {
-    margin: 8px 0; /* 항목 간격 증가 */
-    color: #d8e0e8; /* 항목 글자색 */
+    margin: 8px 0;
+    color: #d8e0e8;
     font-size: 16px;
   }
   .highlight {
     font-weight: bold;
-    font-size: 17px; /* 강조 숫자 크기 키움 */
-    color: #5effc9; /* 강조 색상 (민트 계열) */
-    text-shadow: 0 0 3px rgba(94, 255, 201, 0.5); /* 은은한 그림자 */
+    font-size: 17px;
+    color: #5effc9;
+    text-shadow: 0 0 3px rgba(94, 255, 201, 0.5);
   }
-  .main-box {background:#1f1636; border:1px solid #4e8ef7; color:#d8e0e8;} /* 예치 RAM 박스 */
-  .bonus-box {background:#2a1b42; border:1px solid #8c63ff; color:#d8e0e8;} /* 보너스 RAM 박스 */
-  .total-box {background:#202a3a; border:1px solid #2fd4b5; color:#d8e0e8;} /* 총 합계 박스 */
+  .main-box {background:#1f1636; border:1px solid #4e8ef7; color:#d8e0e8;}
+  .bonus-box {background:#2a1b42; border:1px solid #8c63ff; color:#d8e0e8;}
+  .total-box {background:#202a3a; border:1px solid #2fd4b5; color:#d8e0e8;}
 
-  /* 각 박스의 타이틀 색상 */
   .main-box .result-title { color: #4e8ef7; }
   .bonus-box .result-title { color: #8c63ff; }
   .total-box .result-title { color: #2fd4b5; }
@@ -130,7 +146,7 @@
   }
   .alert-warning {
     background: #3a1a1a;
-    color: #ff6b6b; /* 경고색 약간 밝게 */
+    color: #ff6b6b;
     border: 1px solid #ff4d4d;
   }
   .promo-group {
@@ -138,40 +154,40 @@
     justify-content: space-between;
     margin-top: 10px;
     text-align: center;
-    gap: 15px; /* 간격 추가 */
+    gap: 15px;
   }
   .promo-option {
-    flex: 1; /* 너비 균등 분배 */
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #120c24; /* 입력 필드와 동일한 배경 */
+    background: #120c24;
     padding: 12px 0;
     border: 1px solid #6c63ff55;
-    border-radius: 10px; /* 모서리 둥글기 증가 */
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
   }
+  /* ✅ 라디오 버튼 숨기기 */
   .promo-option input[type="radio"] {
-    margin-top: 8px; /* 라디오 버튼 마진 */
-    width: auto; /* 라디오 버튼 너비 고정 */
+    display: none; /* 라디오 버튼 자체를 숨김 */
   }
   .promo-option span {
     color: #ecf0f1;
-    font-size: 16px; /* 폰트 크기 키움 */
+    font-size: 16px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 0; /* 라디오 버튼과의 간격 조정 */
+    margin-bottom: 0;
   }
-  .promo-option:has(input:checked) { /* 선택 시 스타일 변경 */
-    background: linear-gradient(45deg, #6c63ff20, #4e8ef720); /* 선택 시 은은한 그라데이션 */
+  .promo-option:has(input:checked) {
+    background: linear-gradient(45deg, #6c63ff20, #4e8ef720);
     border-color: #6c63ff;
     box-shadow: 0 0 10px rgba(108, 99, 255, 0.5), inset 0 0 5px rgba(108, 99, 255, 0.3);
   }
 
-  /* 반응형 디자인 (선택 사항) */
+  /* 반응형 디자인 */
   @media (max-width: 480px) {
     body {
       margin: 15px auto;
@@ -197,11 +213,17 @@
       font-size: 14px;
     }
     .promo-group {
-      flex-direction: column; /* 모바일에서 세로로 정렬 */
+      flex-direction: column;
       gap: 10px;
     }
     .promo-option {
       width: 100%;
+    }
+    /* ✅ 모바일에서 입력 필드 너비 다시 100%로 확장 */
+    input[type="number"],
+    .date-select-group select,
+    select:not(#hash) {
+      max-width: 100%; /* 모바일에서 다시 최대 너비 없앰 */
     }
   }
 </style>
@@ -234,14 +256,14 @@
 
 <label>프로모션 여부:</label>
 <div class="promo-group">
-  <div class="promo-option">
+  <label class="promo-option">
     <span>기본</span>
-    <input type="radio" name="promo" value="basic" checked>
-  </div>
-  <div class="promo-option">
+    <input type="radio" name="promo" value="basic" checked style="display:none;">
+  </label>
+  <label class="promo-option">
     <span>프로모션</span>
-    <input type="radio" name="promo" value="promo">
-  </div>
+    <input type="radio" name="promo" value="promo" style="display:none;">
+  </label>
 </div>
 
 <button onclick="calc()">계산하기</button>
@@ -253,42 +275,37 @@ document.addEventListener("DOMContentLoaded", function () {
   const startMonthSelect = document.getElementById("startMonth");
   const startDaySelect = document.getElementById("startDay");
 
-  // 월 드롭다운 채우기 (1월 ~ 12월)
   for (let i = 1; i <= 12; i++) {
     const option = document.createElement("option");
-    option.value = i.toString().padStart(2, '0'); // '01', '02' 형식
+    option.value = i.toString().padStart(2, '0');
     option.textContent = i + "월";
     startMonthSelect.appendChild(option);
   }
 
-  // 일 드롭다운 채우기 (선택된 월에 따라 동적으로 변경)
   function populateDays(month, year) {
-    startDaySelect.innerHTML = ''; // 기존 옵션 모두 제거
-    const daysInMonth = new Date(year, month, 0).getDate(); // 해당 월의 마지막 일자 계산 (예: 2025년 2월은 28일)
+    startDaySelect.innerHTML = '';
+    const daysInMonth = new Date(year, month, 0).getDate();
     for (let i = 1; i <= daysInMonth; i++) {
       const option = document.createElement("option");
-      option.value = i.toString().padStart(2, '0'); // '01', '02' 형식
+      option.value = i.toString().padStart(2, '0');
       option.textContent = i + "일";
       startDaySelect.appendChild(option);
     }
   }
 
-  // 월 선택 변경 시 일 드롭다운 업데이트
   startMonthSelect.addEventListener("change", function() {
     const selectedMonth = parseInt(this.value);
-    populateDays(selectedMonth, 2025); // 2025년 고정
+    populateDays(selectedMonth, 2025);
   });
 
-  // 초기 로드 시 오늘 날짜로 월/일 설정
   const today = new Date();
-  const currentMonth = today.getMonth() + 1; // getMonth()는 0부터 시작
+  const currentMonth = today.getMonth() + 1;
   const currentDay = today.getDate();
-  
+
   startMonthSelect.value = currentMonth.toString().padStart(2, '0');
-  populateDays(currentMonth, 2025); // 현재 월 기준으로 일자 채우기
+  populateDays(currentMonth, 2025);
   startDaySelect.value = currentDay.toString().padStart(2, '0');
 
-  // ✅ 계산 로직
   const dayBonusTable = [
     {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
     {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
