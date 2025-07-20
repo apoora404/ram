@@ -233,32 +233,34 @@
   }
   /* 각 탭 콘텐츠 자체는 flex item이 아니라 block으로 유지 */
   .tab-content {
-    display: none; /* 기본적으로 숨김 */
+    display: none;
   }
   .tab-content.active {
-    display: block; /* 활성화된 탭만 보임 */
+    display: block;
   }
 
   /* ✅ 프로모션 상세 사이드바 스타일 (메인 레이아웃 안에) */
   .promo-details-main-sidebar {
     flex-grow: 0;
     flex-shrink: 0;
-    width: 380px; /* 사이드바 너비 증가 */
-    background: #1e1430;
-    padding: 30px; /* 패딩 증가 */
-    border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.05);
-    border: 1px solid #8c7eff33;
+    width: 380px; /* 사이드바 너비 고정 */
+    /* ✅ 박스 스타일 모두 제거 */
+    /* background: #1e1430; */ 
+    /* padding: 30px; */ 
+    /* border-radius: 18px; */ 
+    /* box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.05); */ 
+    /* border: 1px solid #8c7eff33; */ 
     box-sizing: border-box;
     display: flex; /* 내부 콘텐츠 정렬을 위해 flex 사용 */
     align-items: center; /* 이미지를 세로 중앙 정렬 */
     justify-content: center; /* 이미지를 가로 중앙 정렬 */
+    /* min-height: unset; */ /* 내용이 이미지 하나이므로 최소 높이 불필요 */
   }
   /* ✅ 사이드바 내부 이미지 스타일 */
   .promo-details-main-sidebar img {
-    width: 100%; /* ✅ 너비 100%로 강제 조절 */
+    width: 100%; /* 너비 100%로 강제 조절 (사이드바 너비 380px에 맞춰짐) */
     height: auto; /* 높이 자동 조절 */
-    border-radius: 10px; /* 이미지 자체도 둥글게 */
+    /* border-radius: 10px; */ /* 이미지 자체 박스 스타일 제거에 따라 둥근 모서리도 제거 */
   }
 
 
@@ -397,8 +399,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const promoSidebar = document.getElementById('promoSidebar');
 
   // 프로모션 상세 이미지 (HTML 문자열로 저장)
-  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg?raw=true" alt="CPI 프로모션 안내">`; // ?raw=true 추가
-  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg?raw=true" alt="RAM 프로모션 안내">`; // ?raw=true 추가
+  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg?raw=true" alt="CPI 프로모션 안내">`;
+  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg?raw=true" alt="RAM 프로모션 안내">`;
 
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
