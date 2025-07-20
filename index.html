@@ -321,15 +321,22 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // 만기일까지의 보너스 이자만 합산 (예치 기간에 맞춰)
     let bonus_interest_until_maturity = dailyInterest_bonus * days; 
-    let bonus_interest_remaining = dailyInterest_bonus * (2400 - days);
+    let bonus_interest_remaining = dailyInterest_bonus * (2400 - days); // 2400일 기준 남은 보너스 이자
+
 
     // 총합 (만기일까지 받은 총 이자)
     let total_until_maturity_combined = total_main + bonus_interest_until_maturity; 
     
-    // ✅ 새로운 계산: 현재까지 받은 총 이자 (예치 + 보너스)
-    let total_received_so_far = (dailyInterest_main + dailyInterest_bonus) * diffDays;
-    // ✅ 새로운 계산: 만기일까지 남은 총 이자 (예치 + 보너스)
-    let total_remaining_until_maturity = (dailyInterest_main + dailyInterest_bonus) * remainDays;
+    // ✅ 각 RAM 항목별 현재까지 받은 총 이자 / 만기일 까지 남은 총 이자
+    let total_main_received_so_far = dailyInterest_main * diffDays;
+    let total_main_remaining_until_maturity = dailyInterest_main * remainDays;
+
+    let total_bonus_received_so_far = dailyInterest_bonus * diffDays;
+    let total_bonus_remaining_until_maturity = dailyInterest_bonus * remainDays; // 보너스 RAM도 할당 기간에 맞춰 남은 기간 계산
+
+    // ✅ 총 합계에서 현재까지 받은 총 이자 / 만기일 까지 남은 총 이자
+    let total_combined_received_so_far = total_main_received_so_far + total_bonus_received_so_far;
+    let total_combined_remaining_until_maturity = total_main_remaining_until_maturity + total_bonus_remaining_until_maturity;
 
 
     // 원금 회수 예상 (보너스 포함)은 여전히 일일 총 이자 기준
@@ -340,10 +347,10 @@ document.addEventListener("DOMContentLoaded", function () {
       ? "<div class='alert-box alert-warning'>🔔 알림: 만기 일이 원금 회수 기간보다 짧습니다.</div>"
       : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
 
-    // ✅ 만기일까지 받는 1일/1주일/1달 이자 표시 로직
+    // ✅ 만기일까지 받는 1일/1주일/1달 이자 표시 로직 (총합 이자 기준)
     let dailyWeeklyMonthlyDisplay = "";
     if (remainDays > 0) { // 만기일이 아직 남은 경우에만 표시
-        let daily_total_for_remaining = dailyInterest_main + dailyInterest_bonus;
+        let daily_total_for_remaining = dailyInterest_main + dailyInterest_bonus; // 예치+보너스 일일 이자
         dailyWeeklyMonthlyDisplay += "<div class='result-item'>만기일까지 받을 1일 이자: <span class='highlight'>" + daily_total_for_remaining.toFixed(2) + "</span> USDT</div>";
         if (remainDays >= 7) {
             dailyWeeklyMonthlyDisplay += "<div class='result-item'>만기일까지 받을 1주일 이자(7일): <span class='highlight'>" + (daily_total_for_remaining * 7).toFixed(2) + "</span> USDT</div>";
@@ -360,18 +367,23 @@ document.addEventListener("DOMContentLoaded", function () {
       "<div class='result-item'>투자 금액: <span class='highlight'>" + invest.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_main.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>총 이자(" + days + "일): <span class='highlight'>" + total_main.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>원금 회수 예상일: <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div></div>" +
+      "<div class='result-item'>원금 회수 예상일: <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div>" +
+      "<div class='result-item'>현재까지 받은 이자: <span class='highlight'>" + total_main_received_so_far.toFixed(2) + "</span> USDT</div>" + // ✅ 추가
+      "<div class='result-item'>만기일 까지 남은 이자: <span class='highlight'>" + total_main_remaining_until_maturity.toFixed(2) + "</span> USDT</div></div>" + // ✅ 추가
 
       "<div class='result-section bonus-box'><div class='result-title'>[프로모션 보너스 RAM]</div>" +
       "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>만기일까지 이자(" + days + "일): <span class='highlight'>" + bonus_interest_until_maturity.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>남은 기간 이자(" + Math.max(0, 2400 - days) + "일): <span class='highlight'>" + bonus_interest_remaining.toFixed(2) + "</span> USDT</div></div>" +
+      "<div class='result-item'>남은 기간 이자(" + Math.max(0, 2400 - days) + "일): <span class='highlight'>" + bonus_interest_remaining.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>현재까지 받은 이자: <span class='highlight'>" + total_bonus_received_so_far.toFixed(2) + "</span> USDT</div>" + // ✅ 추가
+      "<div class='result-item'>만기일 까지 남은 이자: <span class='highlight'>" + total_bonus_remaining_until_maturity.toFixed(2) + "</span> USDT</div></div>" + // ✅ 추가
 
       "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
       "<div class='result-item'>예치 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
-      "<div class='result-item'>현재까지 받은 총 이자(예치+보너스): <span class='highlight'>" + total_received_so_far.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>만기일 까지 남은 총 이자(예치+보너스): <span class='highlight'>" + total_remaining_until_maturity.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>현재까지 받은 총 이자: <span class='highlight'>" + total_combined_received_so_far.toFixed(2) + "</span> USDT</div>" + // ✅ 추가
+      "<div class='result-item'>만기일 까지 남은 총 이자: <span class='highlight'>" + total_combined_remaining_until_maturity.toFixed(2) + "</span> USDT</div>" + // ✅ 추가
+      "<div class='result-item'>만기일까지 받은 총 이자(예치+보너스): <span class='highlight'>" + total_until_maturity_combined.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
       dailyWeeklyMonthlyDisplay + // 조건부로 생성된 1일/1주/1달 이자 표시
       "</div>";
