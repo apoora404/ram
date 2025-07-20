@@ -8,34 +8,35 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
-    max-width: 950px; /* 전체 너비 확장 */
+    max-width: 900px; /* 전체 레이아웃의 최대 너비 */
     margin: 30px auto;
-    padding: 0 20px; /* 좌우 패딩만 유지 */
-    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
+    padding: 0 20px;
+    background: linear-gradient(135deg, #0e0e1e, #1a0f2b);
     color: #e0e6f0;
     box-sizing: border-box;
-    display: flex; /* body에 flex 적용 */
-    justify-content: center; /* 중앙 정렬 */
+    display: flex;
+    justify-content: center;
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
     display: flex;
-    gap: 100px; /* 계산기와 사이드바 간격 */
-    flex-wrap: wrap; /* 반응형 시 줄바꿈 */
-    max-width: 950px; /* 전체 최대 너비 */
-    width: 100%; /* 너비 100% (max-width까지) */
+    gap: 25px; /* 계산기와 사이드바 간격 */
+    flex-wrap: wrap; /* 공간 부족 시 줄바꿈 */
+    max-width: 900px; /* 전체 최대 너비 (더 이상 겹치지 않도록 충분히 확보) */
+    width: 100%;
   }
   h2 {
     text-align: center;
-    color: #8c7eff; /* 메인 강조색 */
+    color: #8c7eff;
     font-size: 28px;
     margin-bottom: 25px;
     text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
+  /* ✅ 계산기 카드 너비 고정 및 줄어들지 않도록 설정 */
   .card {
-    flex: 1; /* 계산기 카드가 남은 공간을 채우도록 */
-    min-width: 380px; /* 계산기 카드의 최소 너비 */
-    background: #1e1430; /* 카드 배경색 */
+    width: 450px; /* ✅ 계산기 카드의 고정 너비 */
+    flex-shrink: 0; /* ✅ 공간 부족 시 줄어들지 않음 */
+    background: #1e1430;
     padding: 25px;
     border-radius: 18px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.1);
@@ -67,7 +68,7 @@
   input::placeholder {
     color: #8a96a8;
   }
-  select:not(#hash) { /* RAM 해시레이트 선택 박스 제외 */
+  select:not(#hash) {
     max-width: 200px;
     width: 100%;
     padding: 12px 15px;
@@ -86,7 +87,6 @@
     background-position: right 8px top 50%;
     background-size: 16px;
   }
-  /* RAM 계산기 해시레이트 선택 박스 */
   select#hash {
     width: 100%;
     padding: 12px 15px;
@@ -124,7 +124,7 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(140, 126, 255, 0.6);
   }
-  #resultRam, #resultCpi { /* 각 계산기 결과 섹션 ID */
+  #resultRam, #resultCpi {
     margin-top: 30px;
   }
   .result-section {
@@ -139,7 +139,7 @@
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    color: #5effc9; /* 결과 타이틀 강조색 */
+    color: #5effc9;
   }
   .result-item {
     margin: 8px 0;
@@ -149,7 +149,7 @@
   .highlight {
     font-weight: bold;
     font-size: 17px;
-    color: #5effc9; /* 강조 색상 (민트 계열) */
+    color: #5effc9;
     text-shadow: 0 0 3px rgba(94, 255, 201, 0.5);
   }
   .main-box {background:#1f1636; border:1px solid #4e8ef7; color:#d8e0e8;}
@@ -173,7 +173,6 @@
     color: #ff6b6b;
     border: 1px solid #ff4d4d;
   }
-  /* CPI 및 RAM 프로모션 체크박스 스타일 */
   .cpi-promo-checkbox, .ram-promo-checkbox {
     display: flex;
     align-items: center;
@@ -193,7 +192,6 @@
     -moz-appearance: checkbox;
   }
 
-  /* 날짜 드롭다운을 위한 스타일 */
   .date-select-group {
     display: flex;
     gap: 10px;
@@ -203,7 +201,6 @@
     flex: 1;
   }
 
-  /* 탭 관련 스타일 */
   .tabs {
     display: flex;
     justify-content: center;
@@ -231,7 +228,6 @@
     color: white;
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
-  /* 각 탭 콘텐츠 자체는 flex item이 아니라 block으로 유지 */
   .tab-content {
     display: none;
   }
@@ -254,11 +250,11 @@
     display: flex; /* 내부 콘텐츠 정렬을 위해 flex 사용 */
     align-items: center; /* 이미지를 세로 중앙 정렬 */
     justify-content: center; /* 이미지를 가로 중앙 정렬 */
-    /* min-height: unset; */ /* 내용이 이미지 하나이므로 최소 높이 불필요 */
+    min-height: 400px; /* ✅ 사이드바 최소 높이 확보 (이미지보다 작으면 안됨) */
   }
   /* ✅ 사이드바 내부 이미지 스타일 */
   .promo-details-main-sidebar img {
-    width: 200%; /* 너비 100%로 강제 조절 (사이드바 너비 380px에 맞춰짐) */
+    width: 100%; /* 너비 100%로 강제 조절 (사이드바 너비 380px에 맞춰짐) */
     height: auto; /* 높이 자동 조절 */
     /* border-radius: 10px; */ /* 이미지 자체 박스 스타일 제거에 따라 둥근 모서리도 제거 */
   }
@@ -274,7 +270,7 @@
       min-width: unset; /* 최소 너비 제한 해제 */
     }
     .promo-details-main-sidebar {
-      width: 200%; /* 전체 너비 */
+      width: 100%; /* 전체 너비 */
       order: 1; /* 사이드바를 위로 이동 */
       min-height: unset; /* 내용이 이미지 하나이므로 최소 높이 불필요 */
     }
