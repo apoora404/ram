@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>RAM 요율 계산기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   body {
@@ -172,9 +173,7 @@
 flatpickr("#startDate", {
   dateFormat: "Y-m-d"
 });
-</script>
 
-<script>
 const dayBonusTable = [
   {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
   {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
@@ -255,14 +254,14 @@ function calc() {
   let total_main = dailyInterest_main * days;
   let recoveryDays_main = invest / dailyInterest_main;
 
-  // 보너스 RAM (만기일까지 이자만)
+  // 보너스 RAM
   let bonusRAM = getBonusRAM(invest, days);
   let bonusRate = getBonusRate(bonusRAM);
   let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3;
   let bonus_interest_until_maturity = dailyInterest_bonus * days;
   let bonus_interest_remaining = dailyInterest_bonus * (2400 - days);
 
-  // 총합 (만기일까지)
+  // 총합
   let total_until_maturity = total_main + bonus_interest_until_maturity;
   let daily_total = dailyInterest_main + dailyInterest_bonus;
   let recoveryDays_total = invest / daily_total;
