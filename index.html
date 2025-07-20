@@ -284,4 +284,16 @@ function calc() {
     "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
     "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
     "<div class='result-item'>만기일까지 이자(" + days + "일): <span class='highlight'>" + bonus_interest_until_maturity.toFixed(2) + "</span> USDT</div>" +
-    "<div class='result-item'>남은 기간 이자("
+    "<div class='result-item'>남은 기간 이자(" + (2400 - days) + "일): <span class='highlight'>" + bonus_interest_remaining.toFixed(2) + "</span> USDT</div></div>" +
+
+    "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
+    "<div class='result-item'>예치 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
+    "<div class='result-item'>만기일까지 받은 총 이자(예치+보너스): <span class='highlight'>" + total_until_maturity.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
+    "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total*7).toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total*30).toFixed(2) + "</span> USDT</div></div>";
+}
+</script>
+</body>
+</html>
