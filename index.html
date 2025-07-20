@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>RAM 요율 계산기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -82,11 +83,9 @@
     font-size: 15px;
     color: #4e8ef7;
   }
-  /* 색상 구분 */
   .main-box {background:#12141f; border:1px solid #4e8ef7;}
   .bonus-box {background:#17162a; border:1px solid #8c63ff;}
   .total-box {background:#132428; border:1px solid #2fd4b5;}
-  /* 알림 박스 */
   .alert-box {
     padding: 12px;
     margin-bottom: 15px;
@@ -104,7 +103,6 @@
     color: #ff4d4d;
     border: 1px solid #ff4d4d;
   }
-  /* 프로모션 UI */
   .promo-group {
     display: flex;
     justify-content: space-between;
@@ -130,7 +128,52 @@
     margin-bottom: 5px;
   }
 </style>
+</head>
+<body>
+<div class="card">
+<h2>RAM 요율 계산기</h2>
+<label>할당 금액(USDT):</label>
+<input type="number" id="invest" placeholder="예: 5000">
+
+<label>할당 기간(일):</label>
+<input type="number" id="days" placeholder="예: 120">
+
+<label>예치 시작일:</label>
+<input type="text" id="startDate" placeholder="날짜를 선택하세요">
+
+<label>해시레이트 구간:</label>
+<select id="hash">
+  <option value="1">1M ~ 5M</option>
+  <option value="1.05">5M ~ 8M</option>
+  <option value="1.1025">8M ~ 16M</option>
+  <option value="1.157625">16M ~ 25M</option>
+  <option value="1.21550625">25M ~ 50M</option>
+  <option value="1.27628157">50M+</option>
+</select>
+
+<label>프로모션 여부:</label>
+<div class="promo-group">
+  <div class="promo-option">
+    <span>기본</span>
+    <input type="radio" name="promo" value="basic" checked>
+  </div>
+  <div class="promo-option">
+    <span>프로모션</span>
+    <input type="radio" name="promo" value="promo">
+  </div>
+</div>
+
+<button onclick="calc()">계산하기</button>
+<div id="result"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+flatpickr("#startDate", {
+  dateFormat: "Y-m-d",
+  defaultDate: "today"
+});
+
 const dayBonusTable = [
   {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02},
   {day:320, bonus:1.03}, {day:401, bonus:1.04}, {day:480, bonus:1.05},
@@ -185,109 +228,74 @@ function getBonusRate(bonusRAM) {
 }
 
 function calc() {
-    let invest = parseFloat(document.getElementById("invest").value);
-    let days = parseInt(document.getElementById("days").value);
-    let startDate = document.getElementById("startDate").value;
-    let hashBonus = parseFloat(document.getElementById("hash").value);
-    let promo = document.querySelector('input[name="promo"]:checked').value;
+  let invest = parseFloat(document.getElementById("invest").value);
+  let days = parseInt(document.getElementById("days").value);
+  let startDate = document.getElementById("startDate").value;
+  let hashBonus = parseFloat(document.getElementById("hash").value);
+  let promo = document.querySelector('input[name="promo"]:checked').value;
 
-    if (isNaN(invest) || isNaN(days) || !startDate) {
-        document.getElementById("result").innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요!</div>";
-        return;
-    }
+  if (isNaN(invest) || isNaN(days) || !startDate) {
+    document.getElementById("result").innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요!</div>";
+    return;
+  }
 
-    // 날짜 계산
-    let today = new Date();
-    let start = new Date(startDate);
-    let diffDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) diffDays = 0;
-    let remainDays = days - diffDays;
-    if (remainDays < 0) remainDays = 0;
+  // 날짜 계산
+  let today = new Date();
+  let start = new Date(startDate);
+  let diffDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+  if (diffDays < 0) diffDays = 0;
+  let remainDays = days - diffDays;
+  if (remainDays < 0) remainDays = 0;
 
-    // 예치 RAM
-    let baseRate = getBaseRate(invest, promo);
-    let dayBonus = getDayBonus(days);
-    let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
-    let total_main = dailyInterest_main * days;
-    let recoveryDays_main = invest / dailyInterest_main;
+  // 예치 RAM
+  let baseRate = getBaseRate(invest, promo);
+  let dayBonus = getDayBonus(days);
+  let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
+  let total_main = dailyInterest_main * days;
+  let recoveryDays_main = invest / dailyInterest_main;
 
-    // 보너스 RAM
-    let bonusRAM = getBonusRAM(invest, days);
-    let bonusRate = getBonusRate(bonusRAM);
-    let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3;
-    let total_bonus = dailyInterest_bonus * 2400;
+  // 보너스 RAM (만기일까지 이자만 계산)
+  let bonusRAM = getBonusRAM(invest, days);
+  let bonusRate = getBonusRate(bonusRAM);
+  let dailyInterest_bonus = bonusRAM * bonusRate * hashBonus * 1.3;
+  let bonus_interest_until_maturity = dailyInterest_bonus * days;
+  let bonus_interest_remaining = dailyInterest_bonus * (2400 - days);
 
-    // 총합
-    let daily_total = dailyInterest_main + dailyInterest_bonus;
-    let total_all = total_main + total_bonus;
-    let recoveryDays_total = invest / daily_total;
+  // 총합 (만기일까지 받은 이자만)
+  let total_until_maturity = total_main + bonus_interest_until_maturity;
+  let daily_total = dailyInterest_main + dailyInterest_bonus;
+  let recoveryDays_total = invest / daily_total;
 
-    // 알림 메시지
-    let alertMsg = "";
-    if (recoveryDays_main > days) {
-        alertMsg = "<div class='alert-box alert-warning'>🔔 알림: 만기 일이 원금 회수 기간보다 짧습니다.</div>";
-    } else {
-        alertMsg = "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
-    }
+  // 알림 메시지
+  let alertMsg = "";
+  if (recoveryDays_main > days) {
+    alertMsg = "<div class='alert-box alert-warning'>🔔 알림: 만기 일이 원금 회수 기간보다 짧습니다.</div>";
+  } else {
+    alertMsg = "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
+  }
 
-    document.getElementById("result").innerHTML =
-      alertMsg +
-      "<div class='result-section main-box'><div class='result-title'>[내가 구매한 RAM]</div>" +
-      "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_main.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>총 이자(" + days + "일): <span class='highlight'>" + total_main.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>원금 회수 예상일(내가 구매한 RAM): <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div></div>" +
+  document.getElementById("result").innerHTML =
+    alertMsg +
+    "<div class='result-section main-box'><div class='result-title'>[내가 구매한 RAM]</div>" +
+    "<div class='result-item'>투자 금액: <span class='highlight'>" + invest.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_main.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>총 이자(" + days + "일): <span class='highlight'>" + total_main.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>원금 회수 예상일: <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div></div>" +
 
-      "<div class='result-section bonus-box'><div class='result-title'>[프로모션 보너스 RAM (2400일)]</div>" +
-      "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>총 이자(2400일): <span class='highlight'>" + total_bonus.toFixed(2) + "</span> USDT</div></div>" +
+    "<div class='result-section bonus-box'><div class='result-title'>[프로모션 보너스 RAM]</div>" +
+    "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>만기일까지 이자(" + days + "일): <span class='highlight'>" + bonus_interest_until_maturity.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>남은 기간 이자(" + (2400 - days) + "일): <span class='highlight'>" + bonus_interest_remaining.toFixed(2) + "</span> USDT</div></div>" +
 
-      "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
-      "<div class='result-item'>예치 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
-      "<div class='result-item'>예치 + 보너스 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
-      "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total*7).toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total*30).toFixed(2) + "</span> USDT</div></div>";
+    "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
+    "<div class='result-item'>예치 진행: <span class='highlight'>" + diffDays + "일 경과 / " + remainDays + "일 남음</span></div>" +
+    "<div class='result-item'>만기일까지 받은 총 이자(예치+보너스): <span class='highlight'>" + total_until_maturity.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
+    "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total.toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total*7).toFixed(2) + "</span> USDT</div>" +
+    "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total*30).toFixed(2) + "</span> USDT</div></div>";
 }
 </script>
-</head>
-<body>
-<div class="card">
-<h2>RAM 요율 계산기</h2>
-<label>할당 금액(USDT):</label>
-<input type="number" id="invest" placeholder="예: 5000">
-
-<label>할당 기간(일):</label>
-<input type="number" id="days" placeholder="예: 120">
-
-<label>예치 시작일:</label>
-<input type="date" id="startDate">
-
-<label>해시레이트 구간:</label>
-<select id="hash">
-  <option value="1">1M ~ 5M</option>
-  <option value="1.05">5M ~ 8M</option>
-  <option value="1.1025">8M ~ 16M</option>
-  <option value="1.157625">16M ~ 25M</option>
-  <option value="1.21550625">25M ~ 50M</option>
-  <option value="1.27628157">50M+</option>
-</select>
-
-<label>프로모션 여부:</label>
-<div class="promo-group">
-  <div class="promo-option">
-    <span>기본</span>
-    <input type="radio" name="promo" value="basic" checked>
-  </div>
-  <div class="promo-option">
-    <span>프로모션</span>
-    <input type="radio" name="promo" value="promo">
-  </div>
-</div>
-
-<button onclick="calc()">계산하기</button>
-<div id="result"></div>
-</div>
 </body>
 </html>
