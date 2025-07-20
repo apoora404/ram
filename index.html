@@ -311,9 +311,36 @@
     <button onclick="calculateRam()">계산하기</button> <div id="resultRam"></div> </div>
 
   <div id="cpiCalculator" class="tab-content">
-    <h2>Sollong CPI 성장 계산기</h2>
+    <h2>CPI 계산기</h2>
 
-    <label>초기 CPI 투자 금액(USDT):</label>
+    <label>초기 CPI 입     <select id="ramStartMonth"></select> <select id="ramStartDay"></select> </div>
+
+    <label>해시레이트 구간:</label>
+    <select id="hash">
+      <option value="1">1M ~ 5M</option>
+      <option value="1.05">5M ~ 8M</option>
+      <option value="1.1025">8M ~ 16M</option>
+      <option value="1.157625">16M ~ 25M</option>
+      <option value="1.21550625">25M ~ 50M</option>
+      <option value="1.27628157">50M+</option>
+    </select>
+
+    <label>프로모션 여부:</label>
+    <div class="promo-group">
+      <label class="promo-option">
+        <span>기본</span>
+        <input type="radio" name="promoRam" value="basic" checked style="display:none;"> </label>
+      <label class="promo-option">
+        <span>프로모션</span>
+        <input type="radio" name="promoRam" value="promo" style="display:none;"> </label>
+    </div>
+
+    <button onclick="calculateRam()">계산하기</button> <div id="resultRam"></div> </div>
+
+  <div id="cpiCalculator" class="tab-content">
+    <h2>CPI 계산기</h2>
+
+    <label>초기 CPI 입금액(USDT):</label>
     <input type="number" id="initialInvest" placeholder="예: 5000">
 
     <label>CPI 스테이킹 시작일 (2025년):</label>
@@ -672,7 +699,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<div class='result-item'>CPI 4배 달성 시점: <span class='highlight'>" + daysTo4x + "</span> 일차</div>" +
       "</div>" +
       "<div class='result-section'>" +
-      "<div class='result-title'>현재 스테이킹 정보</div>" +
+      "<div class='result-title'>My CPI</div>" +
       "<div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>" + daysPassedSinceStart + "</span> 일 경과</div>" +
       "<div class='result-item'>현재 총 CPI : <span class='highlight'>" + currentCpiAtToday.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>현재까지 재투자된 금액: <span class='highlight'>" + todayReinvestedAmount.toFixed(2) + "</span> USDT</div>" +
