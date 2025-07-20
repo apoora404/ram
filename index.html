@@ -181,8 +181,12 @@ function calc() {
         document.getElementById("result").innerHTML = "모든 값을 입력하세요!";
         return;
     }
-
-    // AI RAM
+    // 경고 메시지
+    let warningMsg = "";
+    if (recoveryDays_main > days) {
+        warningMsg = "<div class='warning'>⚠️ 원금 회수 예상 기간(" + Math.ceil(recoveryDays_main) + "일)이 할당 기간(" + days + "일)을 초과합니다.</div>";
+      
+    // 내가 구매한 RAM
     let baseRate = getBaseRate(invest, promo);
     let dayBonus = getDayBonus(days);
     let dailyInterest_main = invest * baseRate * hashBonus * dayBonus;
@@ -200,26 +204,22 @@ function calc() {
     let total_all = total_main + total_bonus;
     let recoveryDays_total = invest / daily_total;
 
-    // 경고 메시지
-    let warningMsg = "";
-    if (recoveryDays_main > days) {
-        warningMsg = "<div class='warning'>⚠️ 원금 회수 예상(" + Math.ceil(recoveryDays_main) + "일)이 할당 기간(" + days + "일)을 초과합니다.</div>";
     }
 
     document.getElementById("result").innerHTML =
-      "<div class='result-section main-box'><div class='result-title'>✔ [예치 RAM]</div>" +
+      "<div class='result-section main-box'><div class='result-title'>[내가 구매한 RAM]</div>" +
       "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_main.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>총 이자(" + days + "일): <span class='highlight'>" + total_main.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>원금 회수 예상(예치만): <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div></div>" +
+      "<div class='result-item'>원금 회수 예상일(내가 구매한 RAM): <span class='highlight'>약 " + Math.ceil(recoveryDays_main) + " 일</span></div></div>" +
 
-      "<div class='result-section bonus-box'><div class='result-title'>✔ [보너스 RAM (2400일)]</div>" +
-      "<div class='result-item'>보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-section bonus-box'><div class='result-title'>[프로모션 보너스 RAM (2400일)]</div>" +
+      "<div class='result-item'>프로모션 보너스 RAM: <span class='highlight'>" + bonusRAM.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>일일 이자: <span class='highlight'>" + dailyInterest_bonus.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>총 이자(2400일): <span class='highlight'>" + total_bonus.toFixed(2) + "</span> USDT</div></div>" +
 
-      "<div class='result-section total-box'><div class='result-title'>✔ [총 합계]</div>" +
-      "<div class='result-item'>예치 + 보너스 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div>" +
-      "<div class='result-item'>원금 회수 예상(보너스 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
+      "<div class='result-section total-box'><div class='result-title'>[총 합계]</div>" +
+      "<div class='result-item'>내가 구매한 RAM + 보너스 RAM 총 이자: <span class='highlight'>" + total_all.toFixed(2) + "</span> USDT</div>" +
+      "<div class='result-item'>원금 회수 예상(프로모션 보너스 RAM 포함): <span class='highlight'>약 " + Math.ceil(recoveryDays_total) + " 일</span></div>" +
       "<div class='result-item'>1일 총 이자: <span class='highlight'>" + daily_total.toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>1주일 총 이자(7일): <span class='highlight'>" + (daily_total*7).toFixed(2) + "</span> USDT</div>" +
       "<div class='result-item'>1달 총 이자(30일): <span class='highlight'>" + (daily_total*30).toFixed(2) + "</span> USDT</div></div>" +
