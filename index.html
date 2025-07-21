@@ -8,14 +8,15 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
-    max-width: 1150px; /* 전체 너비 확장 */
+    /* max-width는 main-page-layout으로 이동 */
     margin: 30px auto;
-    padding: 0 20px; /* 좌우 패딩만 유지 */
+    padding: 0; /* body의 좌우 패딩 제거 (main-page-layout에서 처리) */
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
     display: flex; /* body에 flex 적용 */
     justify-content: center; /* 중앙 정렬 */
+    min-height: 100vh; /* 최소 높이 설정으로 스크롤 컨텍스트 확보 */
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
@@ -24,6 +25,9 @@
     flex-wrap: wrap; /* 반응형 시 줄바꿈 */
     max-width: 1150px; /* 전체 최대 너비 */
     width: 100%; /* 너비 100% (max-width까지) */
+    padding: 0 20px; /* ✅ body의 좌우 패딩을 main-page-layout으로 이동 */
+    padding-right: calc(20px + 570px + 25px); /* ✅ 사이드바 고정을 위해 오른쪽 패딩 추가 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
   }
   h2 {
     text-align: center;
@@ -252,6 +256,10 @@
     align-items: center; /* 이미지를 세로 중앙 정렬 */
     justify-content: center; /* 이미지를 가로 중앙 정렬 */
     min-height: 400px; /* 사이드바 최소 높이 확보 */
+    position: fixed; /* ✅ 화면에 고정 */
+    top: 30px; /* ✅ 상단에서 30px 떨어진 위치에 고정 */
+    /* right: 20px; */ /* ✅ 우측에서 20px 떨어진 위치에 고정 (반응형에서 문제 발생 가능) */
+    /* 대신 JavaScript에서 위치를 조정 */
   }
   /* ✅ 사이드바 내부 이미지 스타일 */
   .promo-details-main-sidebar img {
@@ -266,14 +274,16 @@
     .main-page-layout {
       flex-direction: column;
       max-width: 600px; /* 컬럼으로 바뀌면 카드 최대 너비 */
+      padding-right: 20px; /* ✅ 사이드바가 컬럼이 되면 오른쪽 패딩 제거 */
     }
     .card {
       min-width: unset; /* 최소 너비 제한 해제 */
       width: 100%; /* 모바일에서 100% 너비 */
     }
     .promo-details-main-sidebar {
+      position: static; /* ✅ 모바일에서는 고정 해제 (원래 위치로 돌아옴) */
       width: 100%; /* 전체 너비 */
-      order: unset; /* ✅ 사이드바 순서 기본으로 (아래로) */
+      order: unset; /* 사이드바 순서 기본으로 (아래로) */
       min-height: unset; /* 내용이 이미지 하나이므로 최소 높이 불필요 */
     }
     .tabs { order: 2; } /* 탭을 사이드바 아래로 이동 */
@@ -397,8 +407,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const promoSidebar = document.getElementById('promoSidebar');
 
   // 프로모션 상세 이미지 (HTML 문자열로 저장)
-  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="CPI 프로모션 안내">`;
-  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="RAM 프로모션 안내">`;
+  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="CPI 프로모션 안내">`;
+  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="RAM 프로모션 안내">`;
 
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
