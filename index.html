@@ -233,15 +233,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const dailyYieldRate = 0.01, promoDailyYieldRate = 0.02, reinvestCycleDays = 7, minReinvestAmount = 50;
 
     let earliestDate;
-    if (initialInvest > 0 && additionalInvest > 0) {
-        earliestDate = new Date(Math.min(initialDate, additionalDate));
-    } else if (initialInvest > 0) {
-        earliestDate = initialDate;
-    } else if (additionalInvest > 0) {
-        earliestDate = additionalDate;
-    } else {
-        resultCpiDiv.innerHTML = ""; return; // 둘 다 입력 안됐으면 결과 없음
-    }
+    if (initialInvest > 0 && additionalInvest > 0) earliestDate = new Date(Math.min(initialDate, additionalDate));
+    else if (initialInvest > 0) earliestDate = initialDate;
+    else if (additionalInvest > 0) earliestDate = additionalDate;
+    else { resultCpiDiv.innerHTML = ""; return; }
 
     const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000 * 60 * 60 * 24)));
     
