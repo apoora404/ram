@@ -245,6 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     const today = new Date();
+    const totalPrincipal = initialInvest + additionalInvest;
     const bonusAmount = (applyPromo && additionalInvest >= 1000) ? additionalInvest * 0.10 : 0;
     const dailyYieldRate = 0.01, promoDailyYieldRate = 0.02, reinvestCycleDays = 7, minReinvestAmount = 50;
 
@@ -253,48 +254,73 @@ document.addEventListener("DOMContentLoaded", function () {
     else if (initialInvest > 0) earliestDate = initialDate;
     else earliestDate = additionalDate;
 
+    // --- 시뮬레이션 계산 (성장 목표 예측) ---
+    let simCPI = 0, simAccumulated = 0;
+    let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
+    let simDays = 0;
+    for (let day = 0; day < 365 * 10; day++) { // 10년 시뮬레이션
+        let currentDate = new Date(earliestDate);
+        currentDate.setDate(earliestDate.getDate() + day);
+        if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) simCPI += initialInvest;
+        if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) simCPI += additionalInvest;
+        if (simCPI === 0 && day > 0) continue;
+        
+        simDays++;
+        const dailyInterestFromCPI = simCPI * dailyYieldRate;
+        const dailyInterestFromBonus = (additionalInvest > 0 && currentDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+        simAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+
+        if (simDays % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
+            simCPI += simAccumulated; simAccumulated = 0;
+        }
+        if (daysTo2x === "미달성" && simCPI >= totalPrincipal * 2) daysTo2x = simDays;
+        if (daysTo3x === "미달성" && simCPI >= totalPrincipal * 3) daysTo3x = simDays;
+        if (daysTo4x === "미달성" && simCPI >= totalPrincipal * 4) { daysTo4x = simDays; break; }
+    }
+    
     // --- '오늘 기준' 현황 계산 ---
     const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000 * 60 * 60 * 24)));
-    let currentCpiMainInvestAtToday = 0, accumulatedInterest = 0, todayReinvestedAmount = 0, todayReinvestCount = 0;
-    
+    let todayCPI = 0, todayAccumulated = 0, todayReinvestedAmount = 0, todayReinvestCount = 0;
     for (let day = 0; day <= daysPassedSinceStart; day++) {
         let currentDate = new Date(earliestDate);
         currentDate.setDate(earliestDate.getDate() + day);
-        if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) currentCpiMainInvestAtToday += initialInvest;
-        if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) currentCpiMainInvestAtToday += additionalInvest;
+        if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) todayCPI += initialInvest;
+        if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
         
-        const dailyInterestFromCPI = currentCpiMainInvestAtToday * dailyYieldRate;
+        const dailyInterestFromCPI = todayCPI * dailyYieldRate;
         const dailyInterestFromBonus = (additionalInvest > 0 && currentDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
-        accumulatedInterest += dailyInterestFromCPI + dailyInterestFromBonus;
-
-        if ((day + 1) % reinvestCycleDays === 0 && accumulatedInterest >= minReinvestAmount) {
-            currentCpiMainInvestAtToday += accumulatedInterest;
-            todayReinvestedAmount += accumulatedInterest;
-            todayReinvestCount++;
-            accumulatedInterest = 0;
+        todayAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+        
+        if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
+            todayCPI += todayAccumulated; todayReinvestedAmount += todayAccumulated; todayReinvestCount++; todayAccumulated = 0;
         }
     }
-
     const daysToNextReinvestCycle = reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays;
-    
+
     resultCpiDiv.innerHTML = `
-        <div class='result-section cpi-main-box'>
-            <div class='result-title'>[내가 스테이킹한 CPI]</div>
-            <div class='result-item'>초기 투자 금액: <span class='highlight'>${(initialInvest + additionalInvest).toFixed(2)}</span> USDT</div>
-            <div class='result-item'>오늘 기준 CPI: <span class='highlight'>${currentCpiMainInvestAtToday.toFixed(2)}</span> USDT</div>
-        </div>
-        <div class='result-section cpi-bonus-box'>
-            <div class='result-title'>[프로모션 보너스 USDL]</div>
-            <div class='result-item'>보너스 USDL 금액: <span class='highlight'>${bonusAmount.toFixed(2)}</span> USDT (고정)</div>
-        </div>
-        <div class='result-section cpi-summary-box'>
-            <div class='result-title'>[My CPI (오늘 기준)]</div>
-            <div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>${daysPassedSinceStart}</span> 일 경과</div>
-            <div class='result-item'>오늘 기준 총 CPI (보너스 포함): <span class='highlight'>${(currentCpiMainInvestAtToday + bonusAmount).toFixed(2)}</span> USDT</div>
-            <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
-            <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
-            <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
-        </div>`;
+      <div class='result-section cpi-main-box'>
+        <div class='result-title'>[내가 스테이킹한 CPI]</div>
+        <div class='result-item'>초기 투자 금액: <span class='highlight'>${totalPrincipal.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘 기준 CPI: <span class='highlight'>${todayCPI.toFixed(2)}</span> USDT</div>
+      </div>
+      <div class='result-section cpi-bonus-box'>
+        <div class='result-title'>[프로모션 보너스 USDL]</div>
+        <div class='result-item'>보너스 USDL 금액: <span class='highlight'>${bonusAmount.toFixed(2)}</span> USDT (고정)</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[CPI 성장 목표 달성 시점 예측]</div>
+        <div class='result-item'>2배 달성 시점: <span class='highlight'>${daysTo2x}</span> 일차</div>
+        <div class='result-item'>3배 달성 시점: <span class='highlight'>${daysTo3x}</span> 일차</div>
+        <div class='result-item'>4배 달성 시점: <span class='highlight'>${daysTo4x}</span> 일차</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[My CPI (오늘 기준)]</div>
+        <div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>${daysPassedSinceStart}</span> 일 경과</div>
+        <div class='result-item'>오늘 기준 총 CPI (보너스 포함): <span class='highlight'>${(todayCPI + bonusAmount).toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
+        <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
+      </div>`;
   };
 });
 </script>
