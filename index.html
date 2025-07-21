@@ -8,15 +8,14 @@
 <style>
   body {
     font-family: 'Arial', sans-serif;
-    /* max-width는 main-page-layout으로 이동 */
+    max-width: 1150px; /* 전체 너비 확장 */
     margin: 30px auto;
-    padding: 0; /* body의 좌우 패딩 제거 (main-page-layout에서 처리) */
+    padding: 0 20px; /* 좌우 패딩만 유지 */
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); /* Sollong DApp 배경 */
     color: #e0e6f0;
     box-sizing: border-box;
     display: flex; /* body에 flex 적용 */
     justify-content: center; /* 중앙 정렬 */
-    min-height: 100vh; /* 최소 높이 설정으로 스크롤 컨텍스트 확보 */
   }
   /* ✅ 메인 페이지 레이아웃 (계산기 + 사이드바) */
   .main-page-layout {
@@ -25,9 +24,6 @@
     flex-wrap: wrap; /* 반응형 시 줄바꿈 */
     max-width: 1150px; /* 전체 최대 너비 */
     width: 100%; /* 너비 100% (max-width까지) */
-    padding: 0 20px; /* ✅ body의 좌우 패딩을 main-page-layout으로 이동 */
-    padding-right: calc(20px + 570px + 25px); /* ✅ 사이드바 고정을 위해 오른쪽 패딩 추가 */
-    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
   }
   h2 {
     text-align: center;
@@ -258,8 +254,7 @@
     min-height: 400px; /* 사이드바 최소 높이 확보 */
     position: fixed; /* ✅ 화면에 고정 */
     top: 30px; /* ✅ 상단에서 30px 떨어진 위치에 고정 */
-    /* right: 20px; */ /* ✅ 우측에서 20px 떨어진 위치에 고정 (반응형에서 문제 발생 가능) */
-    /* 대신 JavaScript에서 위치를 조정 */
+    /* right 속성은 JavaScript에서 동적으로 계산 */
   }
   /* ✅ 사이드바 내부 이미지 스타일 */
   .promo-details-main-sidebar img {
@@ -285,6 +280,8 @@
       width: 100%; /* 전체 너비 */
       order: unset; /* 사이드바 순서 기본으로 (아래로) */
       min-height: unset; /* 내용이 이미지 하나이므로 최소 높이 불필요 */
+      top: auto; /* 고정 해제에 따른 top 속성 초기화 */
+      right: auto; /* 고정 해제에 따른 right 속성 초기화 */
     }
     .tabs { order: 2; } /* 탭을 사이드바 아래로 이동 */
     #cpiCalculator, #ramCalculator { order: 3; } /* 계산기 콘텐츠를 탭 아래로 이동 */
@@ -407,8 +404,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const promoSidebar = document.getElementById('promoSidebar');
 
   // 프로모션 상세 이미지 (HTML 문자열로 저장)
-  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="CPI 프로모션 안내">`;
-  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="RAM 프로모션 안내">`;
+  const cpiPromoImageHtml = `<img src="https://raw.githubusercontent.com/404/ram/main/cpi%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="CPI 프로모션 안내">`;
+  const ramPromoImageHtml = `<img src="https://raw.githubusercontent.com/404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg" alt="RAM 프로모션 안내">`;
 
   // 탭 기능 구현
   const tabButtons = document.querySelectorAll('.tab-button');
