@@ -7,206 +7,84 @@
 <style>
   /* 기본 스타일 */
   body {
-    font-family: 'Arial', sans-serif;
-    margin: 30px auto;
-    padding: 0 20px;
-    background: linear-gradient(135deg, #0e0e1e, #1a0f2b);
-    color: #e0e6f0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* 상단 정렬 */
+    font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
+    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); color: #e0e6f0;
+    display: flex; justify-content: center; align-items: flex-start;
   }
-
-  /* 메인 레이아웃 (계산기 + 사이드바) */
+  /* 메인 레이아웃 */
   .main-page-layout {
-    display: flex;
-    gap: 25px;
-    width: 100%;
-    max-width: 1050px; /* 전체 너비 (450px + 570px + 25px gap) */
-    flex-wrap: wrap; /* 화면이 작아지면 자동 줄바꿈 */
+    display: flex; gap: 25px; width: 100%; max-width: 1050px; flex-wrap: wrap;
   }
-
   /* 계산기 카드 */
   .card {
-    flex: 0 0 450px; /* 너비 450px 고정 */
-    background: #1e1430;
-    padding: 25px;
-    border-radius: 18px;
+    flex: 0 0 450px; background: #1e1430; padding: 25px; border-radius: 18px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 8px rgba(140, 126, 255, 0.05);
-    border: 1px solid #8c7eff33;
-    box-sizing: border-box;
+    border: 1px solid #8c7eff33; box-sizing: border-box;
   }
-
-  /* 오른쪽 프로모션 이미지 사이드바 */
+  /* 프로모션 사이드바 */
   .promo-details-main-sidebar {
-    flex: 1; /* 남는 공간을 모두 차지 */
-    min-width: 400px;
-    background: #1e1430;
-    padding: 20px;
-    border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    border: 1px solid #8c7eff33;
-    box-sizing: border-box;
+    flex: 1; min-width: 400px; background: #1e1430; padding: 20px; border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6); border: 1px solid #8c7eff33; box-sizing: border-box;
   }
-
-  .promo-details-main-sidebar img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-  }
-
+  .promo-details-main-sidebar img { width: 100%; height: auto; border-radius: 10px; }
   /* 탭 스타일 */
-  .tabs {
-    display: flex;
-    margin-bottom: 25px;
-  }
-
+  .tabs { display: flex; margin-bottom: 25px; }
   .tab-button {
-    flex: 1;
-    padding: 12px 0;
-    background: #120c24;
-    border: 1px solid #8c7eff33;
-    color: #c9d2e0;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    flex: 1; padding: 12px 0; background: #120c24; border: 1px solid #8c7eff33;
+    color: #c9d2e0; font-size: 17px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
   }
-
   .tab-button:first-child { border-radius: 12px 0 0 12px; }
   .tab-button:last-child { border-radius: 0 12px 12px 0; }
-
   .tab-button.active {
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7);
-    color: white;
+    background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: white;
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
-
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-
   h2 {
-    text-align: center;
-    color: #8c7eff;
-    font-size: 28px;
-    margin-top: 0;
-    margin-bottom: 25px;
-    text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
+    text-align: center; color: #8c7eff; font-size: 28px; margin-top: 0;
+    margin-bottom: 25px; text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
   }
-
-  /* 입력 필드 및 라벨 스타일 */
-  label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #c9d2e0;
-  }
-
+  /* 입력 필드 및 라벨 */
+  label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #c9d2e0; }
   input[type="number"], select {
-    width: 100%;
-    max-width: 250px;
-    padding: 12px 15px;
-    border: 1px solid #8c7eff55;
-    border-radius: 10px;
-    background: #120c24;
-    color: #e0e6f0;
-    box-sizing: border-box;
+    width: 100%; max-width: 250px; padding: 12px 15px; border: 1px solid #8c7eff55;
+    border-radius: 10px; background: #120c24; color: #e0e6f0; box-sizing: border-box;
   }
-  
-  .date-select-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-  }
+  .date-select-group { display: flex; gap: 10px; margin-top: 5px; }
   .date-select-group select { flex: 1; }
-
-  /* 체크박스 */
   .promo-checkbox {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    padding: 10px;
-    background: #120c24;
-    border-radius: 8px;
-    cursor: pointer;
+    display: flex; align-items: center; margin-top: 20px; padding: 10px;
+    background: #120c24; border-radius: 8px; cursor: pointer;
   }
-  .promo-checkbox input {
-    width: 18px;
-    height: 18px;
-    margin-right: 12px;
-  }
-
-  /* 계산하기 버튼 */
+  .promo-checkbox input { width: 18px; height: 18px; margin-right: 12px; }
   button {
-    margin-top: 30px;
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7);
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    margin-top: 30px; width: 100%; padding: 16px; background: linear-gradient(45deg, #8c7eff, #6a4ef7);
+    color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
+    cursor: pointer; transition: all 0.3s ease;
   }
-  button:hover {
-    opacity: 0.95;
-    transform: translateY(-2px);
-  }
-
+  button:hover { opacity: 0.95; transform: translateY(-2px); }
   /* 결과 섹션 */
-  .result-section {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid;
-  }
+  .result-section { margin-top: 25px; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+    font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
-  .result-item {
-    margin: 10px 0;
-    font-size: 16px;
-  }
-  .highlight {
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #5effc9;
-  }
-
+  .result-item { margin: 10px 0; font-size: 16px; line-height: 1.5; }
+  .highlight { font-weight: bold; font-size: 1.1em; color: #5effc9; }
   .main-box { background:#1f1636; border-color: #4e8ef7; }
   .main-box .result-title { color: #4e8ef7; }
-
   .bonus-box { background:#2a1b42; border-color: #8c63ff; }
   .bonus-box .result-title { color: #8c63ff; }
-
-  .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
-  .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
-  
-  /* 반응형 디자인 */
+  .total-box, .cpi-summary-box, .cpi-main-box { background:#202a3a; border-color: #2fd4b5; }
+  .total-box .result-title, .cpi-summary-box .result-title, .cpi-main-box .result-title { color: #2fd4b5; }
+  .alert-box { padding: 15px; margin-bottom: 20px; border-radius: 10px; font-weight: bold; text-align: center; }
+  .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
+  /* 반응형 */
   @media (max-width: 1024px) {
-    .main-page-layout {
-      flex-direction: column;
-      align-items: center;
-    }
-    .card {
-      flex: 1 1 100%; /* 너비 100% */
-      max-width: 600px;
-    }
-    .promo-details-main-sidebar {
-      flex: 1 1 100%;
-      min-width: unset;
-      width: 100%;
-      max-width: 600px;
-    }
+    .main-page-layout { flex-direction: column; align-items: center; }
+    .card, .promo-details-main-sidebar { flex: 1 1 100%; max-width: 600px; min-width: unset; width: 100%;}
   }
-
 </style>
 </head>
 <body>
@@ -221,19 +99,16 @@
     <div id="cpiCalculator" class="tab-content active">
       <h2>USDL CPI 계산기</h2>
       <label for="initialInvest">초기 CPI 입금액 (USDT):</label>
-      <input type="number" id="initialInvest" placeholder="예: 5000">
-      
+      <input type="number" id="initialInvest" placeholder="예: 2000">
       <label class="promo-checkbox">
           <input type="checkbox" id="applyCpiPromotion">
           <span>CPI 프로모션 적용 (1000 USDT 이상)</span>
       </label>
-
-      <label for="cpiStartMonth">스테이킹 시작일 (2025년):</label>
+      <label for="cpiStartMonth">CPI 스테이킹 시작일 (2025년):</label>
       <div class="date-select-group">
         <select id="cpiStartMonth"></select>
         <select id="cpiStartDay"></select>
       </div>
-
       <button onclick="calculateCpiGrowth()">계산하기</button>
       <div id="resultCpi"></div>
     </div>
@@ -242,31 +117,23 @@
       <h2>RAM 계산기</h2>
       <label for="invest">할당 금액 (USDT):</label>
       <input type="number" id="invest" placeholder="예: 5000">
-
       <label for="days">할당 기간 (일):</label>
       <input type="number" id="days" placeholder="예: 120">
-
       <label for="ramStartMonth">스테이킹 시작일 (2025년):</label>
       <div class="date-select-group">
         <select id="ramStartMonth"></select>
         <select id="ramStartDay"></select>
       </div>
-
       <label for="hash">해시레이트 구간:</label>
       <select id="hash">
-        <option value="1">1M ~ 5M</option>
-        <option value="1.05">5M ~ 8M</option>
-        <option value="1.1025">8M ~ 16M</option>
-        <option value="1.157625">16M ~ 25M</option>
-        <option value="1.21550625">25M ~ 50M</option>
-        <option value="1.27628157">50M+</option>
+        <option value="1">1M ~ 5M</option> <option value="1.05">5M ~ 8M</option>
+        <option value="1.1025">8M ~ 16M</option> <option value="1.157625">16M ~ 25M</option>
+        <option value="1.21550625">25M ~ 50M</option> <option value="1.27628157">50M+</option>
       </select>
-
       <label class="promo-checkbox">
           <input type="checkbox" id="applyRamPromotion">
           <span>RAM 프로모션 적용</span>
       </label>
-      
       <button onclick="calculateRam()">계산하기</button>
       <div id="resultRam"></div>
     </div>
@@ -283,104 +150,166 @@ document.addEventListener("DOMContentLoaded", function () {
   const ramPromoImage = "https://raw.githubusercontent.com/apoora404/ram/main/ram%20%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98.jpg";
   const promoImageElement = document.getElementById('promoImage');
 
-  // 탭 기능
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabContents = document.querySelectorAll('.tab-content');
 
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const targetTab = button.dataset.tab;
-
       tabButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
-
       tabContents.forEach(content => content.classList.remove('active'));
       document.getElementById(targetTab + 'Calculator').classList.add('active');
-      
-      // 탭에 맞는 프로모션 이미지 변경
       promoImageElement.src = (targetTab === 'cpi') ? cpiPromoImage : ramPromoImage;
     });
   });
 
-  // 날짜 드롭다운 채우기 함수
   function populateDateSelects(monthSelect, daySelect, year) {
     for (let i = 1; i <= 12; i++) {
-        const option = document.createElement("option");
-        option.value = i;
-        option.textContent = i + "월";
-        monthSelect.appendChild(option);
+        const option = new Option(`${i}월`, i);
+        monthSelect.add(option);
     }
-
     function updateDays() {
         daySelect.innerHTML = '';
-        const month = parseInt(monthSelect.value);
-        const daysInMonth = new Date(year, month, 0).getDate();
+        const daysInMonth = new Date(year, monthSelect.value, 0).getDate();
         for (let i = 1; i <= daysInMonth; i++) {
-            const option = document.createElement("option");
-            option.value = i;
-            option.textContent = i + "일";
-            daySelect.appendChild(option);
+            daySelect.add(new Option(`${i}일`, i));
         }
     }
-
     monthSelect.addEventListener("change", updateDays);
-    
-    // 초기 날짜 설정 (오늘 날짜)
     const today = new Date();
     monthSelect.value = today.getMonth() + 1;
     updateDays();
     daySelect.value = today.getDate();
   }
 
-  // 각 계산기별 날짜 드롭다운 초기화
   populateDateSelects(document.getElementById("cpiStartMonth"), document.getElementById("cpiStartDay"), 2025);
   populateDateSelects(document.getElementById("ramStartMonth"), document.getElementById("ramStartDay"), 2025);
 
-  // RAM 계산 로직
+  const dayBonusTable = [
+    {day:81, bonus:1.00}, {day:161, bonus:1.01}, {day:240, bonus:1.02}, {day:320, bonus:1.03},
+    {day:401, bonus:1.04}, {day:480, bonus:1.05}, {day:561, bonus:1.06}, {day:641, bonus:1.07},
+    {day:720, bonus:1.08}, {day:801, bonus:1.09}, {day:881, bonus:1.10}, {day:960, bonus:1.11},
+    {day:1041, bonus:1.12}, {day:1121, bonus:1.13}, {day:1200, bonus:1.14}, {day:1281, bonus:1.15},
+    {day:1361, bonus:1.16}, {day:1440, bonus:1.17}, {day:1521, bonus:1.18}, {day:1601, bonus:1.19},
+    {day:1680, bonus:1.20}, {day:1761, bonus:1.21}, {day:1841, bonus:1.22}, {day:1920, bonus:1.23},
+    {day:2001, bonus:1.24}, {day:2081, bonus:1.25}, {day:2160, bonus:1.26}, {day:2241, bonus:1.27},
+    {day:2320, bonus:1.28}, {day:2399, bonus:1.29}, {day:2400, bonus:1.30}
+  ];
+  function getDayBonus(days) {
+    let bonus = 1.0;
+    for (const entry of dayBonusTable) {
+      if (days >= entry.day) bonus = entry.bonus; else break;
+    }
+    return bonus;
+  }
+  function getBaseRate(invest) {
+      if (invest < 1000) return 0.0050; if (invest < 5000) return 0.0053;
+      if (invest < 10000) return 0.0055; return 0.0063;
+  }
+  function getBonusRAM(invest, days) {
+    if (days < 120 || invest < 1000) return 0;
+    if (invest <= 5000) return invest * 0.10; if (invest <= 10000) return invest * 0.15;
+    return invest * 0.20;
+  }
+  function getBonusRate(mainInvestAmount) {
+    if (mainInvestAmount < 1000) return 0;
+    if (mainInvestAmount <= 5000) return 0.0053; if (mainInvestAmount <= 10000) return 0.00578;
+    return 0.00693;
+  }
+
   window.calculateRam = function() {
-    // ... (이전과 동일한 RAM 계산 로직)
-    let invest = parseFloat(document.getElementById("invest").value) || 0;
-    let days = parseInt(document.getElementById("days").value) || 0;
-    const startMonth = document.getElementById("ramStartMonth").value;
-    const startDay = document.getElementById("ramStartDay").value;
+    let invest = parseFloat(document.getElementById("invest").value);
+    let days = parseInt(document.getElementById("days").value);
     let hashBonus = parseFloat(document.getElementById("hash").value);
     let applyRamPromotion = document.getElementById("applyRamPromotion").checked;
-    
-    // ... (계산 로직 구현)
-    // 간단한 결과 예시
     const resultRamDiv = document.getElementById("resultRam");
-    if(invest > 0 && days > 0) {
-        let dailyInterest_main = invest * 0.0053; // 단순 예시
-        resultRamDiv.innerHTML = `<div class="result-section total-box">
-                                    <div class="result-title">[RAM] 예상 결과</div>
-                                    <div class="result-item">총 예상 수익: <span class="highlight">${(dailyInterest_main * days).toFixed(2)}</span> USDT</div>
-                                  </div>`;
-    } else {
-        resultRamDiv.innerHTML = `<div class="result-section total-box">값을 입력해주세요.</div>`;
+    if (isNaN(invest) || isNaN(days)) {
+      resultRamDiv.innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요.</div>"; return;
     }
+    let dailyInterest_main = invest * getBaseRate(invest) * hashBonus * getDayBonus(days);
+    let total_main = dailyInterest_main * days;
+    let bonusRAM = 0, total_bonus = 0;
+    if (applyRamPromotion && invest >= 1000 && days >= 120) {
+        bonusRAM = getBonusRAM(invest, days);
+        let dailyInterest_bonus = bonusRAM * getBonusRate(invest) * hashBonus * 1.3;
+        total_bonus = dailyInterest_bonus * days;
+    }
+    resultRamDiv.innerHTML = `
+      <div class="result-section main-box"><div class="result-title">[내가 구매한 RAM]</div>
+        <div class="result-item">일일 수익: <span class="highlight">${dailyInterest_main.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 수익 (${days}일): <span class="highlight">${total_main.toFixed(2)}</span> USDT</div></div>
+      <div class="result-section bonus-box"><div class="result-title">[프로모션 보너스 RAM]</div>
+        <div class="result-item">추가 RAM: <span class="highlight">${bonusRAM.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 보너스 수익: <span class="highlight">${total_bonus.toFixed(2)}</span> USDT</div></div>
+      <div class="result-section total-box"><div class="result-title">[총 예상 수익]</div>
+        <div class="result-item">메인+보너스: <span class="highlight">${(total_main + total_bonus).toFixed(2)}</span> USDT</div></div>`;
   };
 
-  // CPI 계산 로직
   window.calculateCpiGrowth = function() {
-    // ... (이전과 동일한 CPI 계산 로직)
-    let initialInvest = parseFloat(document.getElementById("initialInvest").value) || 0;
+    let initialInvest = parseFloat(document.getElementById("initialInvest").value);
     const startMonth = document.getElementById("cpiStartMonth").value;
     const startDay = document.getElementById("cpiStartDay").value;
-    let applyCpiPromotion = document.getElementById("applyCpiPromotion").checked;
-
-    // ... (계산 로직 구현)
-    // 간단한 결과 예시
+    const applyCpiPromotion = document.getElementById("applyCpiPromotion").checked;
     const resultCpiDiv = document.getElementById("resultCpi");
-    if(initialInvest > 0) {
-        let target2x = initialInvest * 2;
-        let daysTo2x = Math.log(2) / Math.log(1 + 0.01); // 일복리 1%로 2배가 되는 기간(단순 예시)
-        resultCpiDiv.innerHTML = `<div class="result-section cpi-summary-box">
-                                      <div class="result-title">[CPI] 성장 예측</div>
-                                      <div class="result-item">2배 달성 예상: <span class="highlight">약 ${Math.ceil(daysTo2x)}</span> 일</div>
-                                  </div>`;
-    } else {
-        resultCpiDiv.innerHTML = `<div class="result-section cpi-summary-box">값을 입력해주세요.</div>`;
+
+    if (isNaN(initialInvest) || initialInvest <= 0) {
+      resultCpiDiv.innerHTML = "<div class='alert-box alert-warning'>초기 투자 금액을 입력해주세요.</div>"; return;
     }
+
+    const dailyYieldRate = 0.01, promoDailyYieldRate = 0.02, reinvestCycleDays = 7, minReinvestAmount = 50;
+    
+    // --- 시뮬레이션 로직 (목표 달성일 계산) ---
+    let simInvest = initialInvest;
+    let bonusAmount = (applyCpiPromotion && initialInvest >= 1000) ? initialInvest * 0.10 : 0;
+    let accumulatedInterest = 0;
+    let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
+    let finalSimulatedCPI = 0;
+    
+    for (let day = 1; day <= 365*5; day++) {
+        accumulatedInterest += (simInvest * dailyYieldRate) + (bonusAmount * promoDailyYieldRate);
+        if (day % reinvestCycleDays === 0 && accumulatedInterest >= minReinvestAmount) {
+            simInvest += accumulatedInterest;
+            accumulatedInterest = 0;
+        }
+        if (daysTo2x === "미달성" && simInvest >= initialInvest * 2) daysTo2x = day;
+        if (daysTo3x === "미달성" && simInvest >= initialInvest * 3) daysTo3x = day;
+        if (daysTo4x === "미달성" && simInvest >= initialInvest * 4) {
+            daysTo4x = day;
+            finalSimulatedCPI = simInvest;
+            break; 
+        }
+    }
+
+    // --- '오늘 기준' 자산 계산 로직 ---
+    const today = new Date();
+    const startDate = new Date(`2025-${startMonth}-${startDay}`);
+    const daysPassed = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)));
+    
+    let todayInvest = initialInvest;
+    let todayAccumulatedInterest = 0;
+    
+    for (let day = 1; day <= daysPassed; day++) {
+        todayAccumulatedInterest += (todayInvest * dailyYieldRate) + (bonusAmount * promoDailyYieldRate);
+        if (day > 0 && day % reinvestCycleDays === 0 && todayAccumulatedInterest >= minReinvestAmount) {
+            todayInvest += todayAccumulatedInterest;
+            todayAccumulatedInterest = 0;
+        }
+    }
+
+    resultCpiDiv.innerHTML = `
+      <div class="result-section main-box"><div class="result-title">[내가 스테이킹한 CPI (USDT)]</div>
+        <div class="result-item">초기 투자 금액: <span class="highlight">${initialInvest.toFixed(2)}</span> USDT</div>
+        <div class="result-item">시뮬레이션 후 최종 CPI: <span class="highlight">${finalSimulatedCPI > 0 ? finalSimulatedCPI.toFixed(2) : '4배 미만'}</span> USDT</div>
+        <div class="result-item">오늘 기준 CPI: <span class="highlight">${todayInvest.toFixed(2)}</span> USDT</div></div>
+      <div class="result-section bonus-box"><div class="result-title">[프로모션 보너스 USDL]</div>
+        <div class="result-item">보너스 USDL 금액 (고정): <span class="highlight">${bonusAmount.toFixed(2)}</span> USDT</div>
+        <div class="result-item">오늘 기준 보너스 USDL: <span class="highlight">${bonusAmount.toFixed(2)}</span> USDT</div></div>
+      <div class="result-section cpi-summary-box"><div class="result-title">CPI 성장 목표 달성 시점 예측</div>
+        <div class="result-item">초기 투자금 대비 2배 달성 시점: <span class="highlight">${daysTo2x}</span> 일차</div>
+        <div class="result-item">초기 투자금 대비 3배 달성 시점: <span class="highlight">${daysTo3x}</span> 일차</div>
+        <div class="result-item">초기 투자금 대비 4배 달성 시점: <span class="highlight">${daysTo4x}</span> 일차</div></div>
+    `;
   };
 });
 </script>
