@@ -51,15 +51,12 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease;
   }
-  
-  /* --- ✅ 2x2 그리드 레이아웃 적용 --- */
   .results-area {
     margin-top: 25px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
-  
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
     font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
@@ -73,17 +70,14 @@
   .bonus-box .result-title, .cpi-bonus-box .result-title { color: #8c63ff; }
   .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
   .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
-  .alert-box { padding: 15px; margin-bottom: 20px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; } /* 알림은 전체 너비 차지 */
+  .alert-box { padding: 15px; margin-bottom: 0; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; }
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
-  
-  /* --- ✅ 모바일 그리드 설정 --- */
   @media (max-width: 768px) {
     .input-grid, .results-area { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-
 <div class="container">
   <div class="card">
     <div class="tabs">
@@ -91,7 +85,6 @@
       <button class="tab-button" data-tab="ramTab">RAM 계산기</button>
       <button class="tab-button" data-tab="promoTab">프로모션</button>
     </div>
-
     <div id="cpiTab" class="tab-content active">
       <h2>CPI 계산기</h2>
       <div class="input-grid">
@@ -119,7 +112,6 @@
       <button onclick="calculateCpiGrowth()">계산하기</button>
       <div id="resultCpi" class="results-area"></div>
     </div>
-
     <div id="ramTab" class="tab-content">
       <h2>RAM 계산기</h2>
       <label for="invest">할당 금액 (USDT):</label>
@@ -142,13 +134,11 @@
       <button onclick="calculateRam()">계산하기</button>
       <div id="resultRam" class="results-area"></div>
     </div>
-
     <div id="promoTab" class="tab-content promo-content">
       <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내">
     </div>
   </div>
 </div>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -295,6 +285,5 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 });
 </script>
-
 </body>
 </html>
