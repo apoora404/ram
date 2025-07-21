@@ -51,8 +51,16 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease;
   }
-  .results-area { margin-top: 25px; }
-  .result-section { margin-bottom: 20px; padding: 20px; border-radius: 15px; border: 1px solid; }
+  
+  /* --- ✅ 2x2 그리드 레이아웃 적용 --- */
+  .results-area {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
     font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -65,9 +73,13 @@
   .bonus-box .result-title, .cpi-bonus-box .result-title { color: #8c63ff; }
   .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
   .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
-  .alert-box { padding: 15px; margin-bottom: 20px; border-radius: 10px; font-weight: bold; text-align: center; }
+  .alert-box { padding: 15px; margin-bottom: 20px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; } /* 알림은 전체 너비 차지 */
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
-  @media (max-width: 768px) { .input-grid { grid-template-columns: 1fr; } }
+  
+  /* --- ✅ 모바일 그리드 설정 --- */
+  @media (max-width: 768px) {
+    .input-grid, .results-area { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
