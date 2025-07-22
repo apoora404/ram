@@ -9,11 +9,24 @@
     font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
     background: linear-gradient(135deg, #0e0e1e, #1a0f2b); color: #e0e6f0;
   }
-  .container { width: 100%; max-width: 800px; margin: 0 auto; }
+  .container { width: 100%; max-width: 1200px; margin: 0 auto; }
   .card {
     background: #1e1430; padding: 25px; border-radius: 18px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.6);
     border: 1px solid #8c7eff33; box-sizing: border-box;
+  }
+  .calculator-wrapper {
+    display: flex;
+    gap: 25px;
+  }
+  .input-column, .results-column {
+    flex: 1;
+    min-width: 0;
+  }
+  .results-column {
+    background: #120c24;
+    padding: 20px;
+    border-radius: 15px;
   }
   .tabs { display: flex; margin-bottom: 25px; }
   .tab-button {
@@ -51,8 +64,10 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease;
   }
-  .results-area {
-    margin-top: 25px;
+  
+  /* --- ✅ 2x2 그리드 및 여백 적용 --- */
+  .result-content { display: none; }
+  .result-content.active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -70,79 +85,84 @@
   .bonus-box .result-title, .cpi-bonus-box .result-title { color: #8c63ff; }
   .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
   .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
-  .alert-box { padding: 15px; margin-bottom: 0; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; }
+  .alert-box { padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; margin-bottom: 20px;}
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
   .alert-success { background: #1a3a1a; color: #6bff6b; border: 1px solid #4dff4d; }
-  @media (max-width: 768px) {
-    .input-grid, .results-area { grid-template-columns: 1fr; }
+  
+  @media (max-width: 900px) {
+    .calculator-wrapper { flex-direction: column; }
+    .input-grid, .result-content.active { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="card">
-    <div class="tabs">
-      <button class="tab-button active" data-tab="cpiTab">CPI 계산기</button>
-      <button class="tab-button" data-tab="ramTab">RAM 계산기</button>
-      <button class="tab-button" data-tab="promoTab">프로모션</button>
-    </div>
-
-    <!-- CPI 탭 -->
-    <div id="cpiTab" class="tab-content active">
-      <h2>CPI 계산기</h2>
-      <div class="input-grid">
-        <div class="input-group">
-          <label for="initialInvest">기존 CPI 입금액 (USDT):</label>
-          <input type="number" id="initialInvest" placeholder="기존 투자금">
-          <label for="cpiInitialMonth">최초 시작일 (2025년):</label>
-          <div class="date-select-group">
-            <select id="cpiInitialMonth"></select><select id="cpiInitialDay"></select>
-          </div>
+    <div class="calculator-wrapper">
+      <div class="input-column">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="cpi">CPI 계산기</button>
+          <button class="tab-button" data-tab="ram">RAM 계산기</button>
+          <button class="tab-button" data-tab="promo">프로모션</button>
         </div>
-        <div class="input-group">
-          <label for="additionalInvest">추가 CPI 입금액 (USDT):</label>
-          <input type="number" id="additionalInvest" placeholder="추가 투자금">
-          <label for="cpiAdditionalMonth">추가 입금일 (2025년):</label>
-          <div class="date-select-group">
-            <select id="cpiAdditionalMonth"></select><select id="cpiAdditionalDay"></select>
+        <!-- CPI 탭 -->
+        <div id="cpiTab" class="tab-content active">
+          <h2>CPI 계산기</h2>
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="initialInvest">기존 CPI 입금액 (USDT):</label>
+              <input type="number" id="initialInvest" placeholder="기존 투자금">
+              <label for="cpiInitialMonth">최초 시작일 (2025년):</label>
+              <div class="date-select-group">
+                <select id="cpiInitialMonth"></select><select id="cpiInitialDay"></select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="additionalInvest">추가 CPI 입금액 (USDT):</label>
+              <input type="number" id="additionalInvest" placeholder="추가 투자금">
+              <label for="cpiAdditionalMonth">추가 입금일 (2025년):</label>
+              <div class="date-select-group">
+                <select id="cpiAdditionalMonth"></select><select id="cpiAdditionalDay"></select>
+              </div>
+            </div>
           </div>
+          <label class="promo-checkbox">
+              <input type="checkbox" id="applyCpiPromotion">
+              <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
+          </label>
+          <button onclick="calculateCpiGrowth()">계산하기</button>
+        </div>
+        <!-- RAM 탭 -->
+        <div id="ramTab" class="tab-content">
+          <h2>RAM 계산기</h2>
+          <label for="invest">할당 금액 (USDT):</label>
+          <input type="number" id="invest" placeholder="예: 5000">
+          <label for="days">할당 기간 (일):</label>
+          <input type="number" id="days" placeholder="예: 120">
+          <label for="ramStartMonth">스테이킹 시작일 (2025년):</label>
+          <div class="date-select-group">
+            <select id="ramStartMonth"></select><select id="ramStartDay"></select>
+          </div>
+          <label for="hash">해시레이트 구간:</label>
+          <select id="hash">
+            <option value="1">1M ~ 5M</option><option value="1.05">5M ~ 8M</option><option value="1.1025">8M ~ 16M</option>
+            <option value="1.157625">16M ~ 25M</option><option value="1.21550625">25M ~ 50M</option><option value="1.27628157">50M+</option>
+          </select>
+          <label class="promo-checkbox">
+              <input type="checkbox" id="applyRamPromotion">
+              <span>RAM 프로모션 적용</span>
+          </label>
+          <button onclick="calculateRam()">계산하기</button>
+        </div>
+        <!-- 프로모션 탭 -->
+        <div id="promoTab" class="tab-content promo-content">
+          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내">
         </div>
       </div>
-      <label class="promo-checkbox">
-          <input type="checkbox" id="applyCpiPromotion">
-          <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
-      </label>
-      <button onclick="calculateCpiGrowth()">계산하기</button>
-      <div id="resultCpi" class="results-area"></div>
-    </div>
-
-    <!-- RAM 탭 -->
-    <div id="ramTab" class="tab-content">
-      <h2>RAM 계산기</h2>
-      <label for="invest">할당 금액 (USDT):</label>
-      <input type="number" id="invest" placeholder="예: 5000">
-      <label for="days">할당 기간 (일):</label>
-      <input type="number" id="days" placeholder="예: 120">
-      <label for="ramStartMonth">스테이킹 시작일 (2025년):</label>
-      <div class="date-select-group">
-        <select id="ramStartMonth"></select><select id="ramStartDay"></select>
+      <div class="results-column">
+        <div id="resultCpi" class="result-content active"></div>
+        <div id="resultRam" class="result-content"></div>
       </div>
-      <label for="hash">해시레이트 구간:</label>
-      <select id="hash">
-        <option value="1">1M ~ 5M</option><option value="1.05">5M ~ 8M</option><option value="1.1025">8M ~ 16M</option>
-        <option value="1.157625">16M ~ 25M</option><option value="1.21550625">25M ~ 50M</option><option value="1.27628157">50M+</option>
-      </select>
-      <label class="promo-checkbox">
-          <input type="checkbox" id="applyRamPromotion">
-          <span>RAM 프로모션 적용</span>
-      </label>
-      <button onclick="calculateRam()">계산하기</button>
-      <div id="resultRam" class="results-area"></div>
-    </div>
-    
-    <!-- 프로모션 탭 -->
-    <div id="promoTab" class="tab-content promo-content">
-      <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내">
     </div>
   </div>
 </div>
@@ -150,12 +170,24 @@
 document.addEventListener("DOMContentLoaded", function () {
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabContents = document.querySelectorAll('.tab-content');
+  const resultContents = document.querySelectorAll('.result-content');
+
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
+      const target = button.dataset.tab;
       tabButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
+      
       tabContents.forEach(content => content.classList.remove('active'));
-      document.getElementById(button.dataset.tab).classList.add('active');
+      resultContents.forEach(content => content.classList.remove('active'));
+      
+      const targetTab = document.getElementById(target + 'Tab');
+      if(targetTab) targetTab.classList.add('active');
+
+      if(target !== 'promo') {
+        const targetResult = document.getElementById('result' + target.charAt(0).toUpperCase() + target.slice(1));
+        if(targetResult) targetResult.classList.add('active');
+      }
     });
   });
 
@@ -228,8 +260,8 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="result-item">현재까지 받은 총 이자(스테이킹+보너스): <span class="highlight">${total_combined_received_so_far.toFixed(2)}</span> USDT</div>
         <div class="result-item">만기일 까지 남은 총 이자(스테이킹+보너스): <span class="highlight">${total_combined_remaining_until_maturity.toFixed(2)}</span> USDT</div>
         <div class="result-item">만기일까지 받는 총 이자(스테이킹+보너스): <span class="highlight">${total_until_maturity_combined.toFixed(2)}</span> USDT</div>
-        <div class="result-item">원금 회수 예상(보너스 포함): <span class="highlight">약 ${Math.ceil(recoveryDays_total)}일</span></div>
-        ${dailyWeeklyMonthlyDisplay}</div>`;
+        <div class="result-item">원금 회수 예상(보너스 포함): <span class="highlight">약 ${Math.ceil(recoveryDays_total)}일</span></div></div>
+      <div class="result-section total-box">${dailyWeeklyMonthlyDisplay}</div>`;
   };
 
   window.calculateCpiGrowth = function() {
@@ -281,17 +313,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const daysToNextReinvestCycle = reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays;
     const dailyBonusInterestToday = (bonusAmount > 0 && today >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+    const currentTotalDailyInterest = (todayCPI * dailyYieldRate) + dailyBonusInterestToday;
 
     // --- 성장 목표 예측 계산 ---
     let simCPI = todayCPI;
     let simAccumulated = todayAccumulated;
     let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
+
+    if (todayCPI >= totalPrincipal * 4) {
+        daysTo2x = "달성 완료"; daysTo3x = "달성 완료"; daysTo4x = "달성 완료";
+    } else if (todayCPI >= totalPrincipal * 3) {
+        daysTo2x = "달성 완료"; daysTo3x = "달성 완료";
+    } else if (todayCPI >= totalPrincipal * 2) {
+        daysTo2x = "달성 완료";
+    }
+
     for (let day = 1; day <= 365 * 10; day++) {
+        if(daysTo4x !== "미달성" && daysTo4x !== "달성 완료") break;
         let futureDate = new Date(today);
         futureDate.setDate(today.getDate() + day);
         
         const dailyInterestFromCPI = simCPI * dailyYieldRate;
-        const dailyInterestFromBonus = (bonusAmount > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+        const dailyInterestFromBonus = (additionalInvest > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
         simAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
 
         if ((daysPassedSinceStart + day + 1) % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
@@ -308,6 +351,8 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class='result-item'>기존 입금액: <span class='highlight'>${initialInvest.toFixed(2)}</span> USDT</div>
         <div class='result-item'>추가 입금액: <span class='highlight'>${additionalInvest.toFixed(2)}</span> USDT</div>
         <div class='result-item'>오늘 기준 총 CPI: <span class='highlight'>${todayCPI.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1일 총 해제량: <span class='highlight'>${currentTotalDailyInterest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1주일 총 해제량: <span class='highlight'>${(currentTotalDailyInterest * 7).toFixed(2)}</span> USDT</div>
       </div>
       <div class='result-section cpi-bonus-box'>
         <div class='result-title'>[프로모션 보너스 USDL]</div>
@@ -321,13 +366,14 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class='result-item'>오늘 기준 총 자산 (CPI+보너스): <span class='highlight'>${(todayCPI + bonusAmount).toFixed(2)}</span> USDT</div>
         <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
         <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
+        <div class='result-item'>다음 재투자까지 쌓인 이자: <span class='highlight'>${todayAccumulated.toFixed(2)}</span> USDT</div>
         <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
       </div>
       <div class='result-section cpi-summary-box'>
         <div class='result-title'>[CPI 성장 목표 달성 예측]</div>
-        <div class='result-item'>2배 달성까지: <span class='highlight'>${daysTo2x}</span> 일 남음</div>
-        <div class='result-item'>3배 달성까지: <span class='highlight'>${daysTo3x}</span> 일 남음</div>
-        <div class='result-item'>4배 달성까지: <span class='highlight'>${daysTo4x}</span> 일 남음</div>
+        <div class='result-item'>2배 달성까지: <span class='highlight'>${daysTo2x === "달성 완료" ? "달성 완료" : daysTo2x + " 일 남음"}</span></div>
+        <div class='result-item'>3배 달성까지: <span class='highlight'>${daysTo3x === "달성 완료" ? "달성 완료" : daysTo3x + " 일 남음"}</span></div>
+        <div class='result-item'>4배 달성까지: <span class='highlight'>${daysTo4x === "달성 완료" ? "달성 완료" : daysTo4x + " 일 남음"}</span></div>
       </div>`;
   };
 });
